@@ -1,0 +1,48 @@
+plugins {
+    id 'multiloader-common'
+}
+
+def commonProject = project(':common')
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+
+def commonJavaDependencies = configurations.create('commonJavaDependencies') {
+    canBeDeclared = true
+    canBeResolved = false
+    canBeConsumed = false
+}
+
+def commonJava = configurations.create('commonJava') {
+    canBeDeclared = false
+    canBeResolved = true
+    canBeConsumed = false
+    extendsFrom(commonJavaDependencies)
+}
+
+dependencies {
+    compileOnly(commonProject) {
+        attributes {
+            attribute(loaderAttribute, 'common')
+        }
+    }
+
+    add(commonJavaDependencies.name, project(path: ':common', configuration: 'commonJava'))
+}
+
+tasks.named('compileJava', JavaCompile).configure {
+    source(commonJava)
+}
+
+processResources {
+    from(commonProject.file('src/main/resources'))
+    from(commonProject.file('src/generated/resources'))
+}
+
+tasks.named('javadoc', Javadoc).configure {
+    source(commonJava)
+}
+
+tasks.named('sourcesJar', Jar).configure {
+    from(commonJava)
+    from(commonProject.file('src/main/resources'))
+    from(commonProject.file('src/generated/resources'))
+}
