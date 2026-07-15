@@ -34,9 +34,8 @@ The loader projects compile and package the Java sources and resources exported 
    - `mod_name`
    - `mod_version`
    - `mod_group_id`
-   - `mod_package`
    - project URLs and the supported version ranges
-4. Rename the final package segment under `io.github.simonxwei` and update the example Java classes.
+4. Rename the final package segment under `io.github.simonxwei`, update the example Java classes, and update the fixed Fabric entrypoint class names in `fabric.mod.json`.
 5. Rename the fixed `template` resource names and their references when changing the mod ID:
    - `template.mixins.json`
    - `template.fabric.mixins.json`
@@ -57,7 +56,7 @@ The template intentionally uses different names for different layers:
 - `Template` is the example mod display name.
 - `TemplateMod` and related PascalCase names are example Java types.
 
-The README title follows the repository name rather than `mod_name`. When creating a mod, rename the project independently from the example mod ID, display name, and Java types as appropriate.
+The README title follows the repository name rather than `mod_name`. File and class references in `fabric.mod.json`, such as the class tweaker path and entrypoint class names, are intentionally concrete so IntelliJ can validate them and navigate to their targets. The mod ID, display metadata, and dependency versions remain sourced from `gradle.properties`.
 
 ## Development
 

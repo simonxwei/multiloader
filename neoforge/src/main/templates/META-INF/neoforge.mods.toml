@@ -6,7 +6,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 displayURL="${mod_homepage}"
-logoFile="mod-icon.png"
+logoFile="${mod_id}.png"
 credits="${mod_credits}"
 authors="${mod_author}"
 description='''
@@ -14,10 +14,10 @@ ${mod_description}
 '''
 
 [[mixins]]
-config="template.mixins.json"
+config="${mod_id}.mixins.json"
 
 [[mixins]]
-config="template.neoforge.mixins.json"
+config="${mod_id}.neoforge.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId="neoforge"

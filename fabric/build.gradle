@@ -44,7 +44,6 @@ processResources {
             mod_id               : mod_id,
             mod_name             : mod_name,
             mod_version          : mod_version,
-            mod_package          : mod_package,
             mod_author           : mod_author,
             mod_license          : mod_license,
             mod_description      : mod_description.replace('\n', '\\n'),

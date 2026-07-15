@@ -13,25 +13,25 @@
         "issues": "${mod_issues}"
     },
     "license": "${mod_license}",
-    "icon": "mod-icon.png",
+    "icon": "${mod_id}.png",
     "environment": "*",
     "accessWidener": "${mod_id}.classtweaker",
     "entrypoints": {
         "main": [
-            "${mod_package}.TemplateMod"
+            "io.github.simonxwei.${mod_id}.TemplateMod"
         ],
         "client": [
-            "${mod_package}.client.TemplateModClient"
+            "io.github.simonxwei.${mod_id}.client.TemplateModClient"
         ],
         "fabric-datagen": [
-            "${mod_package}.client.TemplateModDataGenerator"
+            "io.github.simonxwei.${mod_id}.client.TemplateModDataGenerator"
         ]
     },
     "mixins": [
-        "template.mixins.json",
-        "template.fabric.mixins.json",
+        "${mod_id}.mixins.json",
+        "${mod_id}.fabric.mixins.json",
         {
-            "config": "template.fabric.client.mixins.json",
+            "config": "${mod_id}.fabric.client.mixins.json",
             "environment": "client"
         }
     ],
