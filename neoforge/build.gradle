@@ -20,11 +20,8 @@ neoForge {
     // Specify the version of NeoForge to use.
     version = project.neoforge_version
 
-    // The Access Transformer belongs to common because it affects common sources.
-    def accessTransformer = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
-    if (accessTransformer.exists()) {
-        accessTransformers.from(accessTransformer)
-    }
+    // Apply the shared Access Transformer while compiling common sources for NeoForge.
+    accessTransformers.from(project(':common').file('src/main/resources/META-INF/accesstransformer.cfg'))
 
     // Default run configurations.
     runs {
@@ -125,7 +122,7 @@ sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 neoForge.ideSyncTask generateModMetadata
 
-// MultiLoader: identify NeoForge-compatible incoming and outgoing variants.
+// multiloader: identify NeoForge-compatible incoming and outgoing variants.
 // This follows the mcgradleconventions loader attribute used by the upstream
 // MultiLoader Template and interoperable multiloader tooling.
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)

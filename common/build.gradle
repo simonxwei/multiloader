@@ -13,15 +13,12 @@ neoForge {
     // without adding Fabric- or NeoForge-specific APIs.
     neoFormVersion = project.neo_form_version
 
-    // Automatically enable an Access Transformer when common provides one.
-    def accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    if (accessTransformer.exists()) {
-        accessTransformers.from(accessTransformer)
-    }
+    // Apply the shared Access Transformer while compiling common sources.
+    accessTransformers.from(file('src/main/resources/META-INF/accesstransformer.cfg'))
 }
 
 // Export raw common Java sources for the two loader projects. This is the
-// MultiLoader-specific part; common itself remains independently compilable.
+// multiloader-specific part; common itself remains independently compilable.
 def commonJava = configurations.create('commonJava') {
     canBeDeclared = false
     canBeResolved = false
@@ -30,7 +27,7 @@ def commonJava = configurations.create('commonJava') {
 
 artifacts.add(commonJava.name, file('src/main/java'))
 
-// Implement the loader attribute convention used by MultiLoader tooling.
+// Implement the loader attribute convention used by multiloader tooling.
 // See https://github.com/mcgradleconventions.
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
 

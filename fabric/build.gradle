@@ -14,10 +14,7 @@ repositories {
 loom {
     splitEnvironmentSourceSets()
 
-    def accessWidener = project(':common').file("src/main/resources/${mod_id}.accesswidener")
-    if (accessWidener.exists()) {
-        accessWidenerPath = accessWidener
-    }
+    accessWidenerPath = project(':common').file("src/main/resources/${mod_id}.classtweaker")
 
     mods {
         "${mod_id}" {
@@ -66,7 +63,7 @@ processResources {
     }
 }
 
-// MultiLoader: identify Fabric-compatible incoming and outgoing variants.
+// multiloader: identify Fabric-compatible incoming and outgoing variants.
 // This follows the mcgradleconventions loader attribute used by the upstream
 // MultiLoader Template and interoperable multiloader tooling.
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)

@@ -12,9 +12,9 @@ public final class TemplateENUSLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        // neoforge
-        this.add("template.configuration.title", "Example Mod Configs");
-        this.add("template.configuration.section.template.common.toml", "Example Mod Configs");
-        this.add("template.configuration.section.template.common.toml.title", "Example Mod Configs");
+        // neoforge configuration
+        this.add("template.configuration.title", "Template Configs");
+        this.add("template.configuration.section.template.common.toml", "Template Configs");
+        this.add("template.configuration.section.template.common.toml.title", "Template Configs");
     }
 }

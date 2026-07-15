@@ -1,4 +1,4 @@
-# MultiLoader
+# multiloader
 
 A personal Gradle project template for developing the same Minecraft mod on Fabric and NeoForge while keeping shared code in an independently compilable `common` project.
 
@@ -42,10 +42,22 @@ The loader projects compile and package the Java sources and resources exported 
    - `template.fabric.mixins.json`
    - `template.fabric.client.mixins.json`
    - `template.neoforge.mixins.json`
+   - `template.classtweaker`
 6. Open the repository root in IntelliJ IDEA and use a Java 25 Gradle JVM and Project SDK.
 7. Reload the Gradle project and run one client configuration for each loader.
 
 The `io.github.simonxwei` namespace is intentionally fixed because this is a personal template. Only the project-specific final package segment normally needs to change.
+
+## Naming
+
+The template intentionally uses different names for different layers:
+
+- `multiloader` is the lowercase repository and Gradle project name.
+- `template` is the lowercase example mod ID and resource namespace.
+- `Template` is the example mod display name.
+- `TemplateMod` and related PascalCase names are example Java types.
+
+The README title follows the repository name rather than `mod_name`. When creating a mod, rename the project independently from the example mod ID, display name, and Java types as appropriate.
 
 ## Development
 
@@ -68,6 +80,17 @@ neoforge/src/main/resources/template.neoforge.mixins.json
 ```
 
 The NeoForge-specific configuration contains both `mixins` and `client` lists because NeoForge does not use the Fabric client source-set split here.
+
+Access changes used by shared code are also stored in `common`, but each loader consumes its own format:
+
+```text
+common/src/main/resources/template.classtweaker
+common/src/main/resources/META-INF/accesstransformer.cfg
+```
+
+The Fabric class tweaker and NeoForge Access Transformer should contain semantically equivalent entries whenever shared code depends on the access change. `common` and `neoforge` both apply the shared Access Transformer because they compile the common Java sources in separate Gradle compilation environments. Fabric applies the class tweaker through Loom and declares it in `fabric.mod.json`.
+
+After changing either file, reload the Gradle project. Fabric entries can additionally be checked with `./gradlew :fabric:validateAccessWidener`.
 
 ## Common Tasks
 
