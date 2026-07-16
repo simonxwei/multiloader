@@ -44,7 +44,7 @@ The key fields have separate responsibilities:
 | `mod_name` | User-facing display name and manifest metadata |
 | `mod_package` | Entrypoint references and Mixin package declarations in processed resources |
 | `mod_group_id` | Gradle group and Maven publication coordinate |
-| `mod_version` | Mod and publication version |
+| `mod_version` | Mod metadata and release version; combined with `minecraft_version` for the Gradle/Maven publication version |
 
 For compatibility with both loaders, `mod_id` should match `[a-z][a-z0-9_]{1,63}`.
 
