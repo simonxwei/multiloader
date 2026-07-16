@@ -93,13 +93,13 @@ The root publication commands run the corresponding tasks for `common`, `fabric`
 
 ## Versioning and Releases
 
-The latest Minecraft development line uses `dev`. Stable maintenance branches use `<minecraft_version>/stable`, such as `26.2/stable`. Stable annotated tags combine the Minecraft version and the independent mod version:
+The latest Minecraft development line uses `dev`. A released template is kept on a branch named after its Minecraft version, such as `26.2`. Release tags combine the Minecraft version and the independent mod version:
 
 ```text
 mc26.2-1.0.0
 ```
 
-Unreleased work remains untagged on `dev`; this template does not use alpha, beta, or release-candidate suffixes. One tag represents the shared common, Fabric, and NeoForge release. See [`RELEASING.md`](RELEASING.md) for the one-time branch setup and release commands.
+Unreleased work remains untagged on `dev`. This template does not use alpha, beta, or release-candidate suffixes, and one tag represents the shared common, Fabric, and NeoForge release. Version branches record the template released for that Minecraft version; they do not imply an obligation to keep loader or dependency versions continuously updated. See [`RELEASING.md`](RELEASING.md) for the IDEA and GitHub release workflow.
 
 ## Sources and License
 

@@ -1,6 +1,6 @@
 # Releasing
 
-**This repository uses a simplified Sodium-style branch and tag layout.** It keeps only stable releases because the template can be changed and tested directly on the development branch.
+**This repository uses a simple branch and tag layout inspired by [Sodium](https://github.com/CaffeineMC/sodium).** The template publishes only directly usable releases; it does not use alpha, beta, or release-candidate versions.
 
 ---
 
@@ -9,8 +9,8 @@
 | Item | Format | Example |
 | --- | --- | --- |
 | Latest development branch | `dev` | `dev` |
-| Stable maintenance branch | `<minecraft_version>/stable` | `26.2/stable` |
-| Stable annotated tag | `mc<minecraft_version>-<mod_version>` | `mc26.2-1.0.0` |
+| Minecraft version branch | `<minecraft_version>` | `26.2` |
+| Release tag | `mc<minecraft_version>-<mod_version>` | `mc26.2-1.0.0` |
 | GitHub release title | `multiloader <mod_version> for Minecraft <minecraft_version>` | `multiloader 1.0.0 for Minecraft 26.2` |
 
 `minecraft_version` and `mod_version` remain separate properties in `gradle.properties`. A Minecraft port does not automatically require a new mod version, while a template change can increase `mod_version` without changing Minecraft compatibility.
@@ -24,79 +24,62 @@ mc26.2-1.0.0-neoforge
 
 These are platform version identifiers, not separate Git tags.
 
-## One-time default branch setup
+## Create a Minecraft version branch
 
-Rename `master` to `dev` locally and publish it:
+Before releasing, make sure the tested commit is pushed to `dev`.
 
-```shell
-git switch master
-git pull --ff-only
-git branch -m dev
-git push -u origin dev
+In IntelliJ IDEA:
+
+1. Check out `dev` and use **Git → Push** to ensure `origin/dev` is current.
+2. Open the branch menu and choose **New Branch from 'dev'**.
+3. Enter the Minecraft version, such as `26.2`, and keep **Checkout branch** enabled.
+4. Use **Git → Push** to create and track `origin/26.2`.
+5. Switch back to `dev` after the version branch has been published.
+
+The new version branch and `dev` initially point to the same tested commit. Future work for another Minecraft version continues on `dev`; the `26.2` branch records the template released for Minecraft 26.2.
+
+## Create the GitHub Release
+
+On GitHub:
+
+1. Open **Releases → Draft a new release**.
+2. Choose **Create new tag** and enter `mc26.2-1.0.0`.
+3. Set the target branch to `26.2`.
+4. Use the title `multiloader 1.0.0 for Minecraft 26.2`.
+5. Do not mark the release as a prerelease.
+6. Publish the release after confirming the selected branch and tag names.
+
+A concise description is sufficient:
+
+```markdown
+Minecraft 26.2 multiloader template for Fabric and NeoForge.
+
+Tested on both loaders.
 ```
 
-In GitHub, open **Settings → Branches**, change the default branch from `master` to `dev`, and then remove the old remote branch:
+The version branch may move if a meaningful template fix is later published, but an existing release tag must never be moved or reused.
 
-```shell
-git push origin --delete master
-```
+## Update an existing Minecraft version
 
-Do not delete `master` before GitHub uses `dev` as the default branch.
+Updating an older version branch is optional. Loader and dependency updates are not required merely because newer compatible versions become available.
 
-## Freeze the current Minecraft version
+When the template itself needs a fix:
 
-After the current `dev` commit has been tested on both loaders, create its stable maintenance branch and first tag. For the current template:
+1. In IDEA, check out the relevant version branch, such as `26.2`.
+2. Increase `mod_version` in `gradle.properties` when the published template version changes.
+3. Make the fix and test Fabric and NeoForge.
+4. Commit and push the version branch.
+5. Create the next release tag, such as `mc26.2-1.0.1`, targeting `26.2`.
 
-```shell
-git switch dev
-git pull --ff-only
+A fix that also applies to `dev` can be applied there separately. Avoid merging unrelated next-version development into an older Minecraft version branch.
 
-git switch -c 26.2/stable
-git push -u origin 26.2/stable
+## Policy
 
-git tag -a mc26.2-1.0.0 -m "multiloader 1.0.0 for Minecraft 26.2"
-git push origin mc26.2-1.0.0
-
-git switch dev
-```
-
-The branch and tag initially point to the same commit. The branch may later receive compatible fixes; the tag must never move. `dev` can immediately begin the next Minecraft port.
-
-## Release a stable fix
-
-Make fixes for an older Minecraft version on its stable branch. Increase `mod_version` when the template itself changes, test both loaders, and create a new tag:
-
-```shell
-git switch 26.2/stable
-git pull --ff-only
-
-# Edit mod_version in gradle.properties, then make and test the fix.
-git add .
-git commit -m "Fix 26.2 template issue"
-git push
-
-git tag -a mc26.2-1.0.1 -m "multiloader 1.0.1 for Minecraft 26.2"
-git push origin mc26.2-1.0.1
-```
-
-Create a GitHub Release from that tag when a visible stable download page is useful.
-
-## Move fixes between branches
-
-A fix that also applies to another maintained line should be copied with `cherry-pick` rather than merging the entire development branch into an older stable branch:
-
-```shell
-git switch 26.2/stable
-git cherry-pick <commit>
-```
-
-Resolve and test the result on that Minecraft version before pushing. Never rewrite or retarget an already published stable tag; create the next patch version instead.
-
-## Development policy
-
-- Untagged commits on `dev` may be experimental or target snapshots.
-- Stable branches accept only changes compatible with their named Minecraft version.
+- `dev` contains the latest Minecraft development work.
+- A branch such as `26.2` records the template released for that Minecraft version.
+- Version branches have no continuous loader or dependency update obligation.
 - Tags are created only after Fabric and NeoForge have both been tested.
+- Existing release tags are immutable; publish a new patch version instead of moving a tag.
 - This template does not use `alpha`, `beta`, or `rc` version suffixes.
 
-The branch and tag naming is inspired by [Sodium](https://github.com/CaffeineMC/sodium), with the prerelease workflow intentionally omitted for this template.
+The naming is inspired by Sodium, while the prerelease and long-term maintenance workflows are intentionally omitted for this template.
