@@ -42,6 +42,8 @@ The key fields have separate responsibilities:
 | `mod_group_id` | Gradle group and Maven publication coordinate |
 | `mod_version` | Mod and publication version |
 
+For compatibility with both loaders, `mod_id` should match `[a-z][a-z0-9_]{1,63}`.
+
 Metadata and Mixin JSON files intentionally contain placeholders such as `${mod_id}` and `${mod_package}`. IntelliJ IDEA may mark them as unresolved before Gradle processes the resources. This is expected and should not be fixed by hardcoding the generated values.
 
 Changing `mod_package` does not rename Java directories, `package` declarations, imports, class names, or ServiceLoader descriptors; those source-level identifiers must still be refactored.

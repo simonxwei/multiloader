@@ -20,8 +20,12 @@ jobs:
           distribution: 'microsoft'
       - name: setup gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
+      - name: validate class tweaker
+        run: ./gradlew :fabric:validateAccessWidener --warning-mode all
       - name: build
         run: ./gradlew build --warning-mode all
       - name: capture project artifacts
