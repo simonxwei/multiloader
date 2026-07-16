@@ -43,6 +43,7 @@ processResources {
     def replaceProperties = [
             mod_id               : mod_id,
             mod_name             : mod_name,
+            mod_package          : mod_package,
             mod_version          : mod_version,
             mod_author           : mod_author,
             mod_license          : mod_license,

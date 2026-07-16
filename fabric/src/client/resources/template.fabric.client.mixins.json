@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "io.github.simonxwei.template.client.mixin",
+    "package": "${mod_package}.client.mixin",
     "compatibilityLevel": "JAVA_25",
     "client": [],
     "injectors": {

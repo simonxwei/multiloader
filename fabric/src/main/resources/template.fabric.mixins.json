@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "io.github.simonxwei.template.mixin",
+    "package": "${mod_package}.mixin",
     "compatibilityLevel": "JAVA_25",
     "mixins": [],
     "injectors": {

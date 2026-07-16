@@ -18,13 +18,13 @@
     "accessWidener": "${mod_id}.classtweaker",
     "entrypoints": {
         "main": [
-            "io.github.simonxwei.${mod_id}.TemplateMod"
+            "${mod_package}.TemplateMod"
         ],
         "client": [
-            "io.github.simonxwei.${mod_id}.client.TemplateModClient"
+            "${mod_package}.client.TemplateModClient"
         ],
         "fabric-datagen": [
-            "io.github.simonxwei.${mod_id}.client.TemplateModDataGenerator"
+            "${mod_package}.client.TemplateModDataGenerator"
         ]
     },
     "mixins": [

@@ -6,6 +6,11 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public final class TemplateENUSLanguageProvider extends LanguageProvider {
 
+    // neoforge configuration
+    private static final String TITLE = Constants.MOD_NAME + " Configs";
+    private static final String CONFIGURATION = Constants.MOD_ID + ".configuration";
+    private static final String SECTION = CONFIGURATION + ".section." + Constants.MOD_ID + ".common.toml";
+
     public TemplateENUSLanguageProvider(final PackOutput output) {
         super(output, Constants.MOD_ID, "en_us");
     }
@@ -13,8 +18,8 @@ public final class TemplateENUSLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         // neoforge configuration
-        this.add("template.configuration.title", "Template Configs");
-        this.add("template.configuration.section.template.common.toml", "Template Configs");
-        this.add("template.configuration.section.template.common.toml.title", "Template Configs");
+        this.add(CONFIGURATION + ".title", TITLE);
+        this.add(SECTION, TITLE);
+        this.add(SECTION + ".title", TITLE);
     }
 }

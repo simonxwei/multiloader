@@ -1,75 +1,75 @@
 # multiloader
 
-A personal Gradle project template for developing the same Minecraft mod on Fabric and NeoForge while keeping shared code in an independently compilable `common` project.
+A personal Gradle template for developing one Minecraft mod on Fabric and NeoForge while keeping shared code in an independently compilable `common` project.
 
-The template currently targets Minecraft 26.2 and Java 25. Version numbers, compatibility ranges, mod metadata, and build-tool versions are centralized in `gradle.properties` so that the two loader projects do not drift apart.
-
-## Design
-
-- `common` contains loader-independent code and is compiled against NeoForm vanilla mode.
-- `fabric` follows the current Fabric template structure and separates `main` and `client` source sets.
-- `neoforge` follows the current NeoForge ModDevGradle template structure.
-- `build-logic` contains only build behavior shared by all projects and the source-merging behavior required by the multiloader layout.
-- `common`, `fabric`, and `neoforge` use the `io.github.mcgradleconventions.loader` attribute so compatible dependency variants can be selected consistently.
-- All three projects form one publication set. Running an unqualified root `publish` or `publishToMavenLocal` task publishes the matching publication from every subproject.
+The template currently targets Minecraft 26.2 and Java 25. Shared versions, compatibility ranges, publication coordinates, and mod metadata are centralized in `gradle.properties`; loader-specific Gradle DSL remains in the corresponding loader project so it can still be compared with the official Fabric and NeoForge templates.
 
 ## Project Structure
 
-```text
-.
-├── build-logic/    Shared Gradle convention plugins
-├── common/         Loader-independent Java sources and resources
-├── fabric/         Fabric entrypoints, APIs, resources, and client sources
-└── neoforge/       NeoForge entrypoints, APIs, resources, and run settings
-```
+| Project | Responsibility |
+| --- | --- |
+| `build-logic` | Shared Gradle conventions and the source/resource wiring required by the multiloader layout |
+| `common` | Loader-independent Java code, generated resources, common Mixins, and shared access-change declarations |
+| `fabric` | Fabric entrypoints, Fabric APIs, metadata, and the separated `main`/`client` source sets |
+| `neoforge` | NeoForge entrypoints, ModDevGradle runs, metadata generation, configuration, and data generation |
 
-The loader projects compile and package the Java sources and resources exported by `common`. The final Fabric and NeoForge JARs are therefore independently installable; players do not install the `common` JAR.
+The loader projects compile and package the Java sources and resources exported by `common`. Their final JARs are independently installable; players do not install the `common` JAR.
 
-## Getting Started
+## Names and Shared Properties
 
-1. Copy or clone the repository under the new project name.
-2. Set `rootProject.name` in `settings.gradle`.
-3. Update the shared values in `gradle.properties`, especially:
-   - `mod_id`
-   - `mod_name`
-   - `mod_version`
-   - `mod_group_id`
-   - project URLs and the supported version ranges
-4. Rename the final package segment under `io.github.simonxwei`, update the example Java classes, and update the fixed Fabric entrypoint class names in `fabric.mod.json`.
-5. Rename the fixed `template` resource names and their references when changing the mod ID:
+The example intentionally uses different names for different layers:
+
+- `multiloader` is the lowercase repository and Gradle root-project name.
+- `template` is the lowercase example mod ID and resource namespace.
+- `Template` is the example display name.
+- `TemplateMod` and related PascalCase names are Java types.
+
+The most important values in `gradle.properties` are:
+
+| Property | Used for |
+| --- | --- |
+| `mod_id` | Loader mod ID, resource namespace, icon name, Mixin filenames, and the Fabric class-tweaker filename |
+| `mod_name` | User-facing display name and JAR manifest metadata |
+| `mod_package` | Fully qualified entrypoint references and Mixin package declarations in processed resources |
+| `mod_group_id` | Gradle group and Maven publication coordinate; it may equal `mod_package`, but has a separate responsibility |
+| `mod_version` | Mod and publication version |
+
+`fabric.mod.json` and the Mixin configurations intentionally contain placeholders such as `${mod_id}` and `${mod_package}`. IntelliJ IDEA may mark these unexpanded values as unresolved in the source files. This is expected: Gradle expands them during resource processing so the generated metadata remains synchronized with `gradle.properties`.
+
+Changing `mod_package` does **not** rename Java directories, Java `package` declarations, imports, or ServiceLoader descriptor filenames. Those are source-level identifiers and must be renamed with IntelliJ refactoring or manually.
+
+## Creating a Project
+
+1. Copy or clone the repository and set `rootProject.name` in `settings.gradle`.
+2. Update the shared values in `gradle.properties`, especially `mod_id`, `mod_name`, `mod_package`, `mod_group_id`, version ranges, and project URLs.
+3. Keep `Constants.MOD_ID` and `Constants.MOD_NAME` synchronized with `mod_id` and `mod_name`. `Constants.MOD_ID` remains a Java compile-time constant because NeoForge annotations require one.
+4. Refactor the example Java package `io.github.simonxwei.template` to match `mod_package`. The fixed `io.github.simonxwei` prefix is intentional for this personal template.
+5. Rename Java types such as `TemplateMod` when the new project should use a different class prefix, then update the corresponding type suffixes in `fabric.mod.json`.
+6. Rename the physical resource files whose names are derived from `mod_id`:
+   - `template.png`
    - `template.mixins.json`
    - `template.fabric.mixins.json`
    - `template.fabric.client.mixins.json`
    - `template.neoforge.mixins.json`
    - `template.classtweaker`
-6. Open the repository root in IntelliJ IDEA and use a Java 25 Gradle JVM and Project SDK.
-7. Reload the Gradle project and run one client configuration for each loader.
+7. When changing the Java package, rename both descriptor files under `META-INF/services` and update the provider class stored inside each file. Gradle does not rename these source files from `mod_package`.
+8. Delete or regenerate stale data under `neoforge/src/generated/resources` after changing the mod ID, then reload Gradle.
+9. Open the repository root in IntelliJ IDEA with Java 25 as both the Gradle JVM and Project SDK, and test one client run for each loader.
 
-The `io.github.simonxwei` namespace is intentionally fixed because this is a personal template. Only the project-specific final package segment normally needs to change.
+`META-INF/accesstransformer.cfg` keeps its standard NeoForge path and does not need a mod-ID-specific filename.
 
-## Naming
+## Development Layout
 
-The template intentionally uses different names for different layers:
+Most implementation code belongs in `common`; it must not reference Fabric or NeoForge APIs. Loader-specific registration, lifecycle hooks, integrations, and client behavior belong in the relevant loader project.
 
-- `multiloader` is the lowercase repository and Gradle project name.
-- `template` is the lowercase example mod ID and resource namespace.
-- `Template` is the example mod display name.
-- `TemplateMod` and related PascalCase names are example Java types.
-
-The README title follows the repository name rather than `mod_name`. File and class references in `fabric.mod.json`, such as the class tweaker path and entrypoint class names, are intentionally concrete so IntelliJ can validate them and navigate to their targets. The mod ID, display metadata, and dependency versions remain sourced from `gradle.properties`.
-
-## Development
-
-Most implementation code belongs in `common`. Code in `common` must not reference Fabric or NeoForge APIs. Loader-specific registration, lifecycle hooks, integrations, and client behavior belong in the corresponding loader project.
-
-Fabric uses these source sets:
+Fabric uses separate source sets:
 
 ```text
 fabric/src/main/      Fabric code available on both physical sides
 fabric/src/client/    Fabric client-only code and resources
 ```
 
-Mixin configurations are distributed as follows:
+Mixin configurations are distributed by responsibility:
 
 ```text
 common/src/main/resources/template.mixins.json
@@ -78,18 +78,24 @@ fabric/src/client/resources/template.fabric.client.mixins.json
 neoforge/src/main/resources/template.neoforge.mixins.json
 ```
 
-The NeoForge-specific configuration contains both `mixins` and `client` lists because NeoForge does not use the Fabric client source-set split here.
+The Mixin `package` fields are expanded from `mod_package`. The configuration filenames are expanded from `mod_id` where they are referenced, but the physical files must still be renamed when creating a project.
 
-Access changes used by shared code are also stored in `common`, but each loader consumes its own format:
+## Access Changes
+
+Access changes required by shared code are declared in both loader formats and stored in `common`:
 
 ```text
 common/src/main/resources/template.classtweaker
 common/src/main/resources/META-INF/accesstransformer.cfg
 ```
 
-The Fabric class tweaker and NeoForge Access Transformer should contain semantically equivalent entries whenever shared code depends on the access change. `common` and `neoforge` both apply the shared Access Transformer because they compile the common Java sources in separate Gradle compilation environments. Fabric applies the class tweaker through Loom and declares it in `fabric.mod.json`.
+The Fabric class tweaker and NeoForge Access Transformer should contain semantically equivalent entries whenever `common` depends on the access change. Fabric consumes the class tweaker through Loom. Both `common` and `neoforge` apply the same Access Transformer because each compiles the common Java sources in its own Gradle compilation environment.
 
-After changing either file, reload the Gradle project. Fabric entries can additionally be checked with `./gradlew :fabric:validateAccessWidener`.
+After editing either file, reload the Gradle project. Fabric entries can additionally be checked with:
+
+```shell
+./gradlew :fabric:validateAccessWidener
+```
 
 ## Common Tasks
 
@@ -102,15 +108,13 @@ After changing either file, reload the Gradle project. Fabric entries can additi
 ./gradlew publish
 ```
 
-By default, `publish` writes the three publications to the root `repo/` directory. Set the `local_maven_url` environment variable to redirect the shared publication repository.
+All three projects form one publication set. An unqualified root `publish` or `publishToMavenLocal` task runs the matching publication task in `common`, `fabric`, and `neoforge`. By default, `publish` writes to the root `repo/` directory; set the `local_maven_url` environment variable to redirect that repository.
 
 ## Template Sources
 
-This repository is a modified personal derivative of [Jaredlll08's MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template). Its loader-specific build files have also been reorganized by comparison with the contemporary Fabric and NeoForge standalone templates, while retaining the useful MultiLoader design of centralized versions and metadata.
+This repository is a personal derivative of [Jaredlll08's MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template). Its loader-specific build files are also organized by comparison with the contemporary Fabric and NeoForge standalone templates while retaining centralized shared metadata and versions.
 
-The upstream MultiLoader Template is released under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/). Attribution is included here to preserve provenance and acknowledge the original work, rather than because CC0 requires attribution.
-
-This repository is not an official Fabric, NeoForge, or upstream MultiLoader project.
+The upstream MultiLoader Template is released under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/). Attribution is retained to preserve provenance. This repository is not an official Fabric, NeoForge, or upstream MultiLoader project.
 
 ## License
 
