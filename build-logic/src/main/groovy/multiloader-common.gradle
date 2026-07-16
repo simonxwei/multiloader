@@ -4,7 +4,7 @@ plugins {
     id 'idea'
 }
 
-version = mod_version
+version = "${mod_version}+mc${minecraft_version}"
 group = mod_group_id
 
 repositories {
@@ -25,7 +25,7 @@ repositories {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    archivesName = "${mod_id}-${project.name}"
 }
 
 java {
@@ -59,6 +59,14 @@ tasks.withType(ProcessResources).configureEach {
 tasks.withType(JavaCompile).configureEach {
     options.release = java_version as int
     options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+    options.docEncoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.locale = 'en_US'
+    options.addBooleanOption('Xdoclint:all,-missing', true)
 }
 
 tasks.withType(Jar).configureEach {
