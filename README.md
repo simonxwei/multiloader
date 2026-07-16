@@ -1,8 +1,12 @@
+<img src="common/src/main/resources/template.png" width="128">
+
 # multiloader
 
-A custom Minecraft 26.2 template for developing one mod on Fabric and NeoForge with shared code in an independently compilable `common` project. It uses Java 25.
+**A custom Minecraft 26.2 template for developing one mod on Fabric and NeoForge** with shared code in an independently compilable `common` project. It uses Java 25.
 
 Shared versions and mod metadata are kept in `gradle.properties`. Fabric- and NeoForge-specific Gradle DSL remains in the corresponding loader project so it can still be compared with the official templates.
+
+---
 
 ## Projects
 
@@ -86,6 +90,16 @@ Both `common` and `neoforge` apply the shared Access Transformer because each co
 ```
 
 The root publication commands run the corresponding tasks for `common`, `fabric`, and `neoforge`. By default, `publish` writes to the root `repo/` directory; set `local_maven_url` to redirect it.
+
+## Versioning and Releases
+
+The latest Minecraft development line uses `dev`. Stable maintenance branches use `<minecraft_version>/stable`, such as `26.2/stable`. Stable annotated tags combine the Minecraft version and the independent mod version:
+
+```text
+mc26.2-1.0.0
+```
+
+Unreleased work remains untagged on `dev`; this template does not use alpha, beta, or release-candidate suffixes. One tag represents the shared common, Fabric, and NeoForge release. See [`RELEASING.md`](RELEASING.md) for the one-time branch setup and release commands.
 
 ## Sources and License
 
