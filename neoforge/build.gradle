@@ -20,6 +20,9 @@ neoForge {
     // Specify the version of NeoForge to use.
     version = project.neoforge_version
 
+    // Validate AT files and raise errors when they have invalid targets.
+    validateAccessTransformers = true
+
     // Apply the shared Access Transformer while compiling common sources for NeoForge.
     accessTransformers.from(project(':common').file('src/main/resources/META-INF/accesstransformer.cfg'))
 

@@ -6,12 +6,12 @@
 
 ## Names
 
-| Item | Format | Example |
-| --- | --- | --- |
-| Latest development branch | `dev` | `dev` |
-| Minecraft version branch | `<minecraft_version>` | `26.2` |
-| Release tag | `mc<minecraft_version>-<mod_version>` | `mc26.2-1.0.0` |
-| GitHub release title | `multiloader <mod_version> for Minecraft <minecraft_version>` | `multiloader 1.0.0 for Minecraft 26.2` |
+| Item                      | Format                                                        | Example                                |
+|---------------------------|---------------------------------------------------------------|----------------------------------------|
+| Latest development branch | `dev`                                                         | `dev`                                  |
+| Minecraft version branch  | `<minecraft_version>`                                         | `26.2`                                 |
+| Release tag               | `mc<minecraft_version>-<mod_version>`                         | `mc26.2-1.0.0`                         |
+| GitHub release title      | `multiloader <mod_version> for Minecraft <minecraft_version>` | `multiloader 1.0.0 for Minecraft 26.2` |
 
 `minecraft_version` and `mod_version` remain separate properties in `gradle.properties`. A Minecraft port does not automatically require a new mod version, while a template change can increase `mod_version` without changing Minecraft compatibility.
 
@@ -23,6 +23,18 @@ mc26.2-1.0.0-neoforge
 ```
 
 These are platform version identifiers, not separate Git tags.
+
+## Verify the release commit
+
+Before creating a Minecraft version branch, run from the repository root:
+
+```shell
+./gradlew clean build --warning-mode all
+./gradlew :fabric:validateAccessWidener --warning-mode all
+./gradlew publishToMavenLocal
+```
+
+The build validates NeoForge Access Transformer targets because `validateAccessTransformers` is enabled in both `common` and `neoforge`. `publishToMavenLocal` is a publication smoke test; it writes to the current user's Maven local repository and does not create GitHub release assets.
 
 ## Create a Minecraft version branch
 

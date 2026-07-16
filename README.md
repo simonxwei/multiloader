@@ -1,4 +1,4 @@
-<img src="common/src/main/resources/template.png" width="128">
+<img src="common/src/main/resources/template.png" width="128" alt="multiloader icon">
 
 # multiloader
 
@@ -10,12 +10,12 @@ Shared versions and mod metadata are kept in `gradle.properties`. Fabric- and Ne
 
 ## Projects
 
-| Project | Purpose |
-| --- | --- |
-| `build-logic` | Shared Gradle conventions and common source/resource wiring |
-| `common` | Loader-independent code, common Mixins, and shared access declarations |
-| `fabric` | Fabric entrypoints, APIs, metadata, data generation, and separate main/client source sets |
-| `neoforge` | NeoForge entrypoints, runs, metadata generation, configuration, and data generation |
+| Project       | Purpose                                                                                   |
+|---------------|-------------------------------------------------------------------------------------------|
+| `build-logic` | Shared Gradle conventions and common source/resource wiring                               |
+| `common`      | Loader-independent code, common Mixins, and shared access declarations                    |
+| `fabric`      | Fabric entrypoints, APIs, metadata, data generation, and separate main/client source sets |
+| `neoforge`    | NeoForge entrypoints, runs, metadata generation, configuration, and data generation       |
 
 Most mod code belongs in `common`, which must not reference Fabric or NeoForge APIs. Loader-specific registration, lifecycle hooks, integrations, and client behavior belong in the relevant loader project.
 
@@ -38,13 +38,13 @@ Most mod code belongs in `common`, which must not reference Fabric or NeoForge A
 
 The key fields have separate responsibilities:
 
-| Property | Purpose |
-| --- | --- |
-| `mod_id` | Loader ID, resource namespace, icon name, Mixin filenames, and class-tweaker filename |
-| `mod_name` | User-facing display name and manifest metadata |
-| `mod_package` | Entrypoint references and Mixin package declarations in processed resources |
-| `mod_group_id` | Gradle group and Maven publication coordinate |
-| `mod_version` | Mod metadata and release version; combined with `minecraft_version` for the Gradle/Maven publication version |
+| Property       | Purpose                                                                                                      |
+|----------------|--------------------------------------------------------------------------------------------------------------|
+| `mod_id`       | Loader ID, resource namespace, icon name, Mixin filenames, and class-tweaker filename                        |
+| `mod_name`     | User-facing display name and manifest metadata                                                               |
+| `mod_package`  | Entrypoint references and Mixin package declarations in processed resources                                  |
+| `mod_group_id` | Gradle group and Maven publication coordinate                                                                |
+| `mod_version`  | Mod metadata and release version; combined with `minecraft_version` for the Gradle/Maven publication version |
 
 For compatibility with both loaders, `mod_id` should match `[a-z][a-z0-9_]{1,63}`.
 
@@ -72,7 +72,7 @@ common/src/main/resources/META-INF/accesstransformer.cfg
 
 When `common` depends on an access change, the Fabric class tweaker and NeoForge Access Transformer must contain semantically equivalent entries. A change used only by loader-specific code needs only that loader's declaration.
 
-Both `common` and `neoforge` apply the shared Access Transformer because each compiles the common Java sources in its own Gradle environment. Reload Gradle after changing either access file. Fabric entries can also be checked with:
+Both `common` and `neoforge` apply the shared Access Transformer because each compiles the common Java sources in its own Gradle environment. ModDevGradle target validation is enabled in both projects, so invalid AT targets raise Gradle errors. Reload Gradle after changing either access file. Fabric entries can also be checked with:
 
 ```shell
 ./gradlew :fabric:validateAccessWidener
@@ -89,7 +89,7 @@ Both `common` and `neoforge` apply the shared Access Transformer because each co
 ./gradlew publish
 ```
 
-The root publication commands run the corresponding tasks for `common`, `fabric`, and `neoforge`. By default, `publish` writes to the root `repo/` directory; set `local_maven_url` to redirect it.
+The root publication commands run the corresponding tasks for `common`, `fabric`, and `neoforge`. By default, `publish` writes to the root `repo/` directory; set `local_maven_url` to redirect it. `publishToMavenLocal` instead writes to the current user's Maven local repository, normally `~/.m2/repository` (`%USERPROFILE%\.m2\repository` on Windows), and does not use `local_maven_url`.
 
 ## Versioning and Releases
 
