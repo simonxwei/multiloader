@@ -1,8 +1,8 @@
-<img src="common/src/main/resources/template.png" width="128" alt="multiloader icon">
+<img src="common/src/main/resources/icon.png" width="128" alt="mod icon">
 
 # multiloader
 
-**A personal Minecraft template for developing one mod on Fabric and NeoForge** with shared code in an independently compilable `common` project. It uses Java 25.
+**A personal Minecraft template for developing one mod on Fabric and NeoForge** with shared code in an independently compilable `common` project. It uses the Java toolchain configured by `java_version` in `gradle.properties`.
 
 This project is derived from [Jaredlll08's MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template). See the upstream README for the general IntelliJ IDEA setup and the common-versus-loader development model. This README documents only the conventions and differences specific to this repository.
 
@@ -21,16 +21,15 @@ Most mod code belongs in `common`, which must not reference Fabric or NeoForge A
 
 ## Creating a Project
 
-1. Import the repository as a Gradle project with Java 25, following the upstream setup guide.
+1. Import the repository as a Gradle project with the Java version configured by `java_version`, following the upstream setup guide.
 2. Set `rootProject.name` in `settings.gradle`, then update versions, compatibility ranges, URLs, and mod fields in `gradle.properties`.
 3. Refactor `io.github.simonxwei.template` to match `mod_package`, rename the `TemplateMod` Java types as needed, and keep `Constants.MOD_ID` and `Constants.MOD_NAME` synchronized with `mod_id` and `mod_name`.
-4. Rename resources derived from `mod_id`: the icon, four Mixin JSON files, and the Fabric class-tweaker file.
-5. When changing the Java package, rename both files under `META-INF/services` and update the provider class inside each file.
-6. Delete or regenerate stale files under `neoforge/src/generated/resources`, reload Gradle, and test both clients.
+4. When changing the Java package, rename both files under `META-INF/services` and update the provider class inside each file.
+5. Delete or regenerate stale files under `neoforge/src/generated/resources`, reload Gradle, and test both clients.
 
 | Property       | Purpose                                                                                                      |
 |----------------|--------------------------------------------------------------------------------------------------------------|
-| `mod_id`       | Loader ID, resource namespace, icon name, Mixin filenames, and class-tweaker filename                        |
+| `mod_id`       | Loader ID, resource namespace, Mixin filenames, and class-tweaker filename                                   |
 | `mod_name`     | User-facing display name and manifest metadata                                                               |
 | `mod_package`  | Entrypoint references and Mixin package declarations in processed resources                                  |
 | `mod_group_id` | Gradle group and Maven publication coordinate                                                                |
