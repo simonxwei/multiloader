@@ -1,6 +1,7 @@
 # Releasing
 
-**This repository uses `dev` for the latest Minecraft development line and one branch for each released Minecraft version.** It publishes stable template releases only.
+**This repository uses `dev` for the latest Minecraft development line and one branch for each released Minecraft version.**
+It publishes stable template releases only.
 
 ---
 
@@ -13,7 +14,8 @@
 | Release tag               | `mc<minecraft_version>-<mod_version>`                         |
 | GitHub release title      | `multiloader <mod_version> for Minecraft <minecraft_version>` |
 
-Use the current `minecraft_version` and `mod_version` values from `gradle.properties`. Keep them separate; one Git tag represents the common, Fabric, and NeoForge outputs together.
+Use the current `minecraft_version` and `mod_version` values from `gradle.properties`.
+Keep them separate; one Git tag represents the common, Fabric, and NeoForge outputs together.
 
 ## Verify
 
@@ -25,7 +27,8 @@ Run from the repository root:
 ./gradlew publishToMavenLocal
 ```
 
-The build also validates NeoForge Access Transformer targets because `validateAccessTransformers` is enabled in both `common` and `neoforge`. `publishToMavenLocal` is only a publication smoke test and writes to the current user's Maven local repository.
+The build also validates NeoForge Access Transformer targets because `validateAccessTransformers` is enabled in both `common` and `neoforge`.
+`publishToMavenLocal` is only a publication smoke test and writes to the current user's Maven local repository.
 
 ## Publish a Minecraft Version
 
@@ -52,7 +55,8 @@ Updating an older version branch is optional. When the template itself needs a f
 3. Apply the fix, verify both loaders, and push the branch.
 4. Create a new tag with the updated `mod_version`.
 
-Never move or reuse an existing release tag. Apply fixes to `dev` separately when they are still relevant there, and do not merge unrelated next-version work into an older branch.
+Never move or reuse an existing release tag.
+Apply fixes to `dev` separately when they are still relevant there, and do not merge unrelated next-version work into an older branch.
 
 ## Policy
 
