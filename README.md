@@ -39,6 +39,7 @@ This includes registration, lifecycle hooks, integrations, and client behavior.
    Follow the upstream setup guide for IntelliJ IDEA.
 2. Set `rootProject.name` in `settings.gradle`.
    Then update versions, compatibility ranges, URLs, and mod fields in `gradle.properties`.
+   When changing `mod_id`, rename the four Mixin configuration files and the Fabric class-tweaker file to use the new ID.
 3. Refactor `io.github.simonxwei.template` to match `mod_package` and rename the `TemplateMod` Java types as needed.
    Keep `Constants.MOD_ID` and `Constants.MOD_NAME` synchronized with `mod_id` and `mod_name`.
 4. When changing the Java package, rename both files under `META-INF/services`.
