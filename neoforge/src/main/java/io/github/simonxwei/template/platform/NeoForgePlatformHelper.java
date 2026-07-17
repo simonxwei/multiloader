@@ -6,7 +6,7 @@ import net.neoforged.fml.loading.FMLLoader;
 
 public final class NeoForgePlatformHelper implements TemplatePlatformHelper {
 
-    private NeoForgePlatformHelper() {}
+    public NeoForgePlatformHelper() {}
 
     @Override
     public String getPlatformName() {

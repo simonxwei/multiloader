@@ -5,7 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 
 public final class FabricPlatformHelper implements TemplatePlatformHelper {
 
-    private FabricPlatformHelper() {}
+    public FabricPlatformHelper() {}
 
     @Override
     public String getPlatformName() {
