@@ -1,9 +1,11 @@
 package io.github.simonxwei.template.platform;
 
-import io.github.simonxwei.template.platform.services.IPlatformHelper;
+import io.github.simonxwei.template.platform.services.TemplatePlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
-public final class FabricPlatformHelper implements IPlatformHelper {
+public final class FabricPlatformHelper implements TemplatePlatformHelper {
+
+    private FabricPlatformHelper() {}
 
     @Override
     public String getPlatformName() {
@@ -11,7 +13,7 @@ public final class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
+    public boolean isModLoaded(final String modId) {
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 

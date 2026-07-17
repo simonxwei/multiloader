@@ -6,12 +6,12 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 
-@Mod(Constants.MOD_ID)
+@Mod(TemplateConstants.MOD_ID)
 public final class TemplateMod {
 
     public TemplateMod(final IEventBus modEventBus, final ModContainer modContainer) {
-        Constants.LOGGER.info("Hello NeoForge world");
-        CommonClass.init();
+        TemplateConstants.LOGGER.info("Hello NeoForge world");
+        TemplateModCommon.init();
         modContainer.registerConfig(ModConfig.Type.COMMON, TemplateConfig.SPEC);
     }
 }

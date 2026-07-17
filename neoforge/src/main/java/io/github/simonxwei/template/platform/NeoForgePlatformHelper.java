@@ -1,10 +1,12 @@
 package io.github.simonxwei.template.platform;
 
-import io.github.simonxwei.template.platform.services.IPlatformHelper;
+import io.github.simonxwei.template.platform.services.TemplatePlatformHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 
-public final class NeoForgePlatformHelper implements IPlatformHelper {
+public final class NeoForgePlatformHelper implements TemplatePlatformHelper {
+
+    private NeoForgePlatformHelper() {}
 
     @Override
     public String getPlatformName() {
@@ -12,7 +14,7 @@ public final class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
+    public boolean isModLoaded(final String modId) {
         return ModList.get().isLoaded(modId);
     }
 

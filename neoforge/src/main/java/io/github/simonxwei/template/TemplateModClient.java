@@ -6,7 +6,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-@Mod(value = Constants.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = TemplateConstants.MOD_ID, dist = Dist.CLIENT)
 public final class TemplateModClient {
 
     public TemplateModClient(final ModContainer container) {

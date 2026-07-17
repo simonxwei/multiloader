@@ -6,7 +6,7 @@ public final class TemplateMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Constants.LOGGER.info("Hello Fabric world");
-        CommonClass.init();
+        TemplateConstants.LOGGER.info("Hello Fabric world");
+        TemplateModCommon.init();
     }
 }
