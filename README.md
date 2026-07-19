@@ -1,4 +1,4 @@
-<img src="common/src/main/resources/icon.png" width="128" alt="project icon">
+<img src="common/src/main/resources/icon.png" width="128" alt="mod icon">
 
 # multiloader
 
@@ -32,6 +32,7 @@ Most mod code belongs in `common`.
 It must not reference Fabric or NeoForge APIs.
 Use `common/src/main` for code that is safe on both the client and dedicated server.
 Use `common/src/client` for loader-independent code that references client-only Minecraft classes.
+The source set is the environment boundary: do not add Fabric `@Environment` or NeoForge `@OnlyIn` annotations to shared client classes.
 Fabric compiles shared client code through its client source set; NeoForge includes it through its Dist-aware universal mod.
 Loader-specific code belongs in the corresponding loader project.
 This includes registration, lifecycle hooks, and platform integrations.
@@ -106,11 +107,19 @@ Validate the Fabric class tweaker with:
 ./gradlew build
 ./gradlew :fabric:runClient
 ./gradlew :neoforge:runClient
+./gradlew :fabric:runServer
+./gradlew :neoforge:runServer
 ./gradlew publishToMavenLocal
 ./gradlew publish
 ```
 
+`runClient` opens the game window. `runServer` starts a console-only dedicated server.
+On the first server run, accept the EULA in the corresponding run directory, start it again, wait for the `Done` message, then enter `stop` for a clean shutdown.
+A successful client run does not replace this check because an integrated single-player server still runs inside a physical client process.
+
 Build artifacts are written to `common/build/libs`, `fabric/build/libs`, and `neoforge/build/libs`.
+The `common` binary, sources, and Javadoc publications intentionally contain only `common/src/main`.
+Shared client classes are compiled into the Fabric and NeoForge artifacts, and their sources are included in the loader sources JARs.
 
 The root publication commands publish `common`, `fabric`, and `neoforge`.
 By default, `publish` writes to the root `repo/` directory and can be redirected with `local_maven_url`.

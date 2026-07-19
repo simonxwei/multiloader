@@ -63,15 +63,6 @@ tasks.named('build').configure {
     dependsOn(tasks.named('clientClasses'))
 }
 
-tasks.named('javadoc', Javadoc).configure {
-    source(sourceSets.client.allJava)
-    classpath += sourceSets.client.compileClasspath
-}
-
-tasks.named('sourcesJar', Jar).configure {
-    from(sourceSets.client.allSource)
-}
-
 // Implement the loader attribute convention used by multiloader tooling.
 // See https://github.com/mcgradleconventions.
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)

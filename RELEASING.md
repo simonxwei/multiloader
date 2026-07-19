@@ -1,6 +1,7 @@
 # Releasing
 
 **This repository uses `dev` for the latest Minecraft development line.**
+
 Each released Minecraft version has its own branch.
 Only final template releases are published.
 
@@ -29,6 +30,16 @@ Run from the repository root:
 ./gradlew publishToMavenLocal
 ```
 
+Then manually verify all four physical environments:
+
+```shell
+./gradlew :fabric:runClient
+./gradlew :neoforge:runClient
+./gradlew :fabric:runServer
+./gradlew :neoforge:runServer
+```
+
+The server runs are console-only. Accept the EULA in each run directory, wait for the `Done` message, then enter `stop`.
 The build also validates NeoForge Access Transformer targets.
 `validateAccessTransformers` is enabled in both `common` and `neoforge`.
 `publishToMavenLocal` is only a publication smoke test.
