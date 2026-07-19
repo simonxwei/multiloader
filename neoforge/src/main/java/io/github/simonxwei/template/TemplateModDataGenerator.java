@@ -1,6 +1,6 @@
 package io.github.simonxwei.template;
 
-import io.github.simonxwei.template.data.lang.TemplateENUSLanguageProvider;
+import io.github.simonxwei.template.data.lang.NeoForgeENUSLanguageProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -12,6 +12,6 @@ public final class TemplateModDataGenerator {
 
     @SubscribeEvent
     public static void gatherData(final GatherDataEvent.Client event) {
-        event.createProvider(TemplateENUSLanguageProvider::new);
+        event.createProvider(NeoForgeENUSLanguageProvider::new);
     }
 }

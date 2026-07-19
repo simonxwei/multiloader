@@ -12,6 +12,20 @@ sourceSets.main.resources {
     exclude('**/.cache/**') // Data generation cache files
 }
 
+// NeoForge keeps its Dist-aware universal source model. Shared client code is
+// physically separate in common, then compiled into the NeoForge mod here.
+tasks.named('compileJava', JavaCompile).configure {
+    source(configurations.commonClientJava)
+}
+
+processResources {
+    from(project(':common').file('src/client/resources'))
+}
+
+tasks.named('javadoc', Javadoc).configure {
+    source(configurations.commonClientJava)
+}
+
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
 }
@@ -73,6 +87,10 @@ configurations {
 }
 
 dependencies {
+    // Expose the shared client output to Gradle's IDE model. The raw shared
+    // client sources are still compiled into this loader's main output.
+    compileOnly this.project(':common').sourceSets.client.output
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

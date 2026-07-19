@@ -30,7 +30,26 @@ fabricApi {
     }
 }
 
+// Fabric compiles shared client code through Loom's client source set,
+// preserving compile-time protection for both Fabric and common main.
+tasks.named('compileClientJava', JavaCompile).configure {
+    source(configurations.commonClientJava)
+}
+
+tasks.named('processClientResources', ProcessResources).configure {
+    from(project(':common').file('src/client/resources'))
+}
+
+tasks.named('javadoc', Javadoc).configure {
+    source(configurations.commonClientJava)
+    classpath += sourceSets.client.compileClasspath
+}
+
 dependencies {
+    // Expose the shared client output to Gradle's IDE model. The raw shared
+    // client sources are still compiled into this loader's client output.
+    clientCompileOnly this.project(':common').sourceSets.client.output
+
     // To change the versions see the gradle.properties file.
     minecraft "com.mojang:minecraft:${minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
