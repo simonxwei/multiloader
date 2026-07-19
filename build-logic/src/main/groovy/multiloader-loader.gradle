@@ -18,6 +18,19 @@ def commonJava = configurations.create('commonJava') {
     extendsFrom(commonJavaDependencies)
 }
 
+def commonClientJavaDependencies = configurations.create('commonClientJavaDependencies') {
+    canBeDeclared = true
+    canBeResolved = false
+    canBeConsumed = false
+}
+
+def commonClientJava = configurations.create('commonClientJava') {
+    canBeDeclared = false
+    canBeResolved = true
+    canBeConsumed = false
+    extendsFrom(commonClientJavaDependencies)
+}
+
 dependencies {
     compileOnly(commonProject) {
         attributes {
@@ -26,6 +39,7 @@ dependencies {
     }
 
     add(commonJavaDependencies.name, project(path: ':common', configuration: 'commonJava'))
+    add(commonClientJavaDependencies.name, project(path: ':common', configuration: 'commonClientJava'))
 }
 
 tasks.named('compileJava', JavaCompile).configure {
@@ -43,6 +57,8 @@ tasks.named('javadoc', Javadoc).configure {
 
 tasks.named('sourcesJar', Jar).configure {
     from(commonJava)
+    from(commonClientJava)
     from(commonProject.file('src/main/resources'))
+    from(commonProject.file('src/client/resources'))
     from(commonProject.file('src/generated/resources'))
 }

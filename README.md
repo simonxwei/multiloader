@@ -1,4 +1,4 @@
-<img src="common/src/main/resources/icon.png" width="128" alt="Project icon">
+<img src="common/src/main/resources/icon.png" width="128" alt="project icon">
 
 # multiloader
 
@@ -24,14 +24,17 @@ This README documents only the conventions and differences specific to this repo
 | Project       | Purpose                                                                                   |
 |---------------|-------------------------------------------------------------------------------------------|
 | `build-logic` | Shared Gradle conventions and common source/resource wiring                               |
-| `common`      | Loader-independent code, common Mixins, and shared access declarations                    |
+| `common`      | Loader-independent main/client code, shared Mixins, and shared access declarations        |
 | `fabric`      | Fabric entrypoints, APIs, metadata, data generation, and separate main/client source sets |
 | `neoforge`    | NeoForge entrypoints, runs, metadata generation, configuration, and data generation       |
 
 Most mod code belongs in `common`.
 It must not reference Fabric or NeoForge APIs.
+Use `common/src/main` for code that is safe on both the client and dedicated server.
+Use `common/src/client` for loader-independent code that references client-only Minecraft classes.
+Fabric compiles shared client code through its client source set; NeoForge includes it through its Dist-aware universal mod.
 Loader-specific code belongs in the corresponding loader project.
-This includes registration, lifecycle hooks, integrations, and client behavior.
+This includes registration, lifecycle hooks, and platform integrations.
 
 ## Creating a Project
 
@@ -39,7 +42,7 @@ This includes registration, lifecycle hooks, integrations, and client behavior.
    Follow the upstream setup guide for IntelliJ IDEA.
 2. Set `rootProject.name` in `settings.gradle`.
    Then update versions, compatibility ranges, URLs, and mod fields in `gradle.properties`.
-   When changing `mod_id`, rename the four Mixin configuration files and the Fabric class-tweaker file to use the new ID.
+   When changing `mod_id`, rename the five Mixin configuration files and the Fabric class-tweaker file to use the new ID.
 3. Refactor `io.github.simonxwei.template` to match `mod_package` and rename the `TemplateMod` Java types as needed.
    Keep `Constants.MOD_ID` and `Constants.MOD_NAME` synchronized with `mod_id` and `mod_name`.
 4. When changing the Java package, rename both files under `META-INF/services`.
@@ -72,6 +75,7 @@ Mixin configurations are separated by responsibility:
 
 ```text
 common/src/main/resources/template.mixins.json
+common/src/client/resources/template.client.mixins.json
 fabric/src/main/resources/template.fabric.mixins.json
 fabric/src/client/resources/template.fabric.client.mixins.json
 neoforge/src/main/resources/template.neoforge.mixins.json
