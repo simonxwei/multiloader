@@ -2,7 +2,7 @@
 
 # multiloader
 
-**A personal Gradle template for developing one Minecraft mod on Fabric and NeoForge.**
+**A personal Gradle template for developing a single Minecraft mod for Fabric and NeoForge.**
 
 Shared code is compiled independently in `common`, including a physically separated shared client source set.
 
