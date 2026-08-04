@@ -1,0 +1,113 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.fabricmc.fabric-loom'
+}
+
+repositories {
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
+}
+
+loom {
+    splitEnvironmentSourceSets()
+
+    accessWidenerPath = project(':common').file("src/main/resources/${mod_id}.classtweaker")
+
+    runs {
+        client {
+            programArguments.addAll '--username', project.development_username
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+}
+
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
+}
+
+// Fabric compiles shared client code through Loom's client source set,
+// preserving compile-time protection for both Fabric and common main.
+tasks.named('compileClientJava', JavaCompile).configure {
+    source(configurations.commonClientJava)
+}
+
+tasks.named('processClientResources', ProcessResources).configure {
+    from(project(':common').file('src/client/resources'))
+}
+
+tasks.named('javadoc', Javadoc).configure {
+    source(configurations.commonClientJava)
+    classpath += sourceSets.client.compileClasspath
+}
+
+dependencies {
+    // Expose the shared client output to Gradle's IDE model. The raw shared
+    // client sources are still compiled into this loader's client output.
+    clientCompileOnly this.project(':common').sourceSets.client.output
+
+    // To change the versions see the gradle.properties file.
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+}
+
+processResources {
+    def replaceProperties = [
+            mod_id               : mod_id,
+            mod_name             : mod_name,
+            mod_package          : mod_package,
+            mod_version          : mod_version,
+            mod_author           : mod_author,
+            mod_license          : mod_license,
+            mod_description      : mod_description.replace('\n', '\\n'),
+            mod_homepage         : mod_homepage,
+            mod_sources          : mod_sources,
+            mod_issues           : mod_issues,
+            minecraft_version    : minecraft_version,
+            java_version         : java_version,
+            fabric_loader_version: fabric_loader_version
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching('fabric.mod.json') {
+        expand replaceProperties
+    }
+}
+
+// multiloader: identify Fabric-compatible incoming and outgoing variants.
+// This follows the mcgradleconventions loader attribute used by the upstream
+// MultiLoader Template and interoperable multiloader tooling.
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements',
+ 'includeInternal', 'modCompileClasspath'].each { configurationName ->
+    configurations.named(configurationName) {
+        attributes {
+            attribute(loaderAttribute, 'fabric')
+        }
+    }
+}
+
+sourceSets.configureEach { sourceSet ->
+    [sourceSet.compileClasspathConfigurationName, sourceSet.runtimeClasspathConfigurationName].each { configurationName ->
+        configurations.named(configurationName) {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
+        }
+    }
+}
