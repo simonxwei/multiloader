@@ -45,7 +45,9 @@ dependencies {
 // Expand the shared Java package in every Mixin configuration. This also covers
 // Fabric client resources, which are processed by a separate resource task.
 def commonResourceProperties = [
-        mod_package: mod_package
+        mod_package      : mod_package,
+        mixin_min_version: mixin_min_version,
+        java_version     : java_version
 ]
 
 tasks.withType(ProcessResources).configureEach {

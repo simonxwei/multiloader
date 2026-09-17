@@ -1,7 +1,8 @@
 {
     "required": true,
+    "minVersion": "${mixin_min_version}",
     "package": "${mod_package}.client.mixin",
-    "compatibilityLevel": "JAVA_25",
+    "compatibilityLevel": "JAVA_${java_version}",
     "client": [],
     "injectors": {
         "defaultRequire": 1

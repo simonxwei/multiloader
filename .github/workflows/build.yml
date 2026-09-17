@@ -28,6 +28,8 @@ jobs:
         run: ./gradlew :fabric:validateAccessWidener --warning-mode all
       - name: build
         run: ./gradlew build --warning-mode all
+      - name: verify maven publication
+        run: ./gradlew publishToMavenLocal --warning-mode all
       - name: capture project artifacts
         uses: actions/upload-artifact@v7
         with:

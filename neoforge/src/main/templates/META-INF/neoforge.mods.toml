@@ -1,4 +1,7 @@
+modLoader="javafml"
+loaderVersion="${neoforge_javafml_version_range}"
 license="${mod_license}"
+licenseURL="${mod_license_url}"
 issueTrackerURL="${mod_issues}"
 
 [[mods]]
@@ -6,7 +9,10 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 displayURL="${mod_homepage}"
-iconFile="icon.png"
+iconFile="${mod_icon}"
+bannerFile="${mod_banner}"
+# NeoForge 26.2+ separates the square list icon from the details-panel banner.
+# iconBlur=false
 credits="${mod_credits}"
 authors="${mod_author}"
 description='''
@@ -15,12 +21,21 @@ ${mod_description}
 
 [[mixins]]
 config="${mod_id}.mixins.json"
+# Optional NeoForge Mixin metadata when a config genuinely needs it:
+# requiredMods=["other_mod"]
+# behaviorVersion="0.17.1"
 
 [[mixins]]
 config="${mod_id}.client.mixins.json"
 
 [[mixins]]
 config="${mod_id}.neoforge.mixins.json"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
+[features.${mod_id}]
+javaVersion="[${java_version},)"
 
 [[dependencies.${mod_id}]]
 modId="neoforge"

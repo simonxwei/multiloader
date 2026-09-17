@@ -105,9 +105,9 @@ Validate the Fabric file with:
 ./gradlew :neoforge:runServer
 ```
 
-Both client runs use `development_username` from `gradle.properties`.
+Both client runs use `username` from `gradle.properties`.
 A client run does not replace dedicated-server testing because an integrated single-player server still runs inside a physical client process.
-For a dedicated server, wait for the `Done` message and enter `stop` for a clean shutdown.
+For NeoForge, ANSI output remains enabled for the dedicated server while JLine is disabled; the `runServer` Gradle task explicitly forwards standard input so `stop` can be entered for a clean shutdown after the `Done` message.
 
 Build outputs are written under each project's `build/libs` directory.
 The `common` publication contains only `common/src/main`; shared client classes and their sources are included in the Fabric and NeoForge outputs.
