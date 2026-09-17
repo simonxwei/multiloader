@@ -8,16 +8,22 @@ issueTrackerURL="${mod_issues}"
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
+authors="${mod_author}"
+credits="${mod_credits}"
 displayURL="${mod_homepage}"
 iconFile="${mod_icon}"
 bannerFile="${mod_banner}"
 # NeoForge 26.2+ separates the square list icon from the details-panel banner.
 # iconBlur=false
-credits="${mod_credits}"
-authors="${mod_author}"
 description='''
 ${mod_description}
 '''
+
+[features.${mod_id}]
+javaVersion="[${java_version},)"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
 
 [[mixins]]
 config="${mod_id}.mixins.json"
@@ -30,12 +36,6 @@ config="${mod_id}.client.mixins.json"
 
 [[mixins]]
 config="${mod_id}.neoforge.mixins.json"
-
-[[accessTransformers]]
-file="META-INF/accesstransformer.cfg"
-
-[features.${mod_id}]
-javaVersion="[${java_version},)"
 
 [[dependencies.${mod_id}]]
 modId="neoforge"

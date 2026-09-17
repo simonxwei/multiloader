@@ -36,26 +36,22 @@ Template releases may use stable versions directly; prerelease suffixes are only
 
 ## Verify
 
-Run from the repository root:
+Run the combined build, access validation, publication smoke test, and Gradle deprecation check from the repository root:
 
 ```shell
-./gradlew clean build --warning-mode all
-./gradlew :fabric:validateAccessWidener --warning-mode all
-./gradlew publishToMavenLocal
+./gradlew clean build :fabric:validateAccessWidener publishToMavenLocal --warning-mode all
 ```
 
-Then verify the relevant runtime environments:
+Then verify all four runtime environments in sequence:
 
 ```shell
-./gradlew :fabric:runClient
-./gradlew :neoforge:runClient
-./gradlew :fabric:runServer
-./gradlew :neoforge:runServer
+./gradlew :fabric:runClient :neoforge:runClient :fabric:runServer :neoforge:runServer
 ```
 
+Close each client normally so Gradle can continue to the next run.
+Dedicated servers should reach the `Done` message and be stopped cleanly with `stop`.
 The build also validates NeoForge Access Transformer targets.
 `publishToMavenLocal` is a publication smoke test, not a remote release.
-Dedicated servers should reach the `Done` message and be stopped cleanly with `stop`.
 
 ## Publish a Template for a Minecraft Version
 

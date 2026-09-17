@@ -16,16 +16,16 @@ loom {
 
     accessWidenerPath = project(':common').file("src/main/resources/${mod_id}.classtweaker")
 
-    runs {
-        client {
-            programArguments.addAll '--username', project.username
-        }
-    }
-
     mods {
         "${mod_id}" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
+        }
+    }
+
+    runs {
+        client {
+            programArguments.addAll '--username', project.username
         }
     }
 }
@@ -34,21 +34,6 @@ fabricApi {
     configureDataGeneration {
         client = true
     }
-}
-
-// Fabric compiles shared client code through Loom's client source set,
-// preserving compile-time protection for both Fabric and common main.
-tasks.named('compileClientJava', JavaCompile).configure {
-    source(configurations.commonClientJava)
-}
-
-tasks.named('processClientResources', ProcessResources).configure {
-    from(project(':common').file('src/client/resources'))
-}
-
-tasks.named('javadoc', Javadoc).configure {
-    source(configurations.commonClientJava)
-    classpath += sourceSets.client.compileClasspath
 }
 
 dependencies {
@@ -67,16 +52,16 @@ dependencies {
 processResources {
     def replaceProperties = [
             mod_id               : mod_id,
-            mod_name             : mod_name,
             mod_package          : mod_package,
             mod_version          : mod_version,
-            mod_author           : mod_author,
-            mod_license          : mod_license,
-            mod_icon             : mod_icon,
+            mod_name             : mod_name,
             mod_description      : mod_description.replace('\n', '\\n'),
+            mod_author           : mod_author,
             mod_homepage         : mod_homepage,
             mod_sources          : mod_sources,
             mod_issues           : mod_issues,
+            mod_license          : mod_license,
+            mod_icon             : mod_icon,
             minecraft_version    : minecraft_version,
             java_version         : java_version,
             fabric_loader_version: fabric_loader_version
@@ -87,6 +72,21 @@ processResources {
     filesMatching('fabric.mod.json') {
         expand replaceProperties
     }
+}
+
+// Fabric compiles shared client code through Loom's client source set,
+// preserving compile-time protection for both Fabric and common main.
+tasks.named('compileClientJava', JavaCompile).configure {
+    source(configurations.commonClientJava)
+}
+
+tasks.named('processClientResources', ProcessResources).configure {
+    from(project(':common').file('src/client/resources'))
+}
+
+tasks.named('javadoc', Javadoc).configure {
+    source(configurations.commonClientJava)
+    classpath += sourceSets.client.compileClasspath
 }
 
 // multiloader: identify Fabric-compatible incoming and outgoing variants.

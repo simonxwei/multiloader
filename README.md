@@ -1,4 +1,4 @@
-<img src="common/src/main/resources/icon.png" width="128" alt="mod icon">
+<img src="common/src/main/resources/banner.png" width="128" alt="mod icon">
 
 # multiloader
 
@@ -48,7 +48,8 @@ NeoForge compiles the same shared implementation into its universal mod and cont
 4. Rename both `META-INF/services` files and update the provider class declared inside each file.
 5. Rename the Mixin configuration files and the Fabric class-tweaker file from `template` to the final mod ID.
 6. Delete or regenerate stale files under `neoforge/src/generated/resources`, reload Gradle, and test both loaders.
-7. Replace or adapt `README.md` and the mod-project section of `RELEASING.md` for the new project's actual release and support policy.
+7. Replace `icon.png` and `banner.png` with the final mod artwork. The template banner is only a placeholder copy of the icon.
+8. Replace or adapt `README.md` and the mod-project section of `RELEASING.md` for the new project's actual release and support policy.
 
 Use IDE refactoring for Java packages, declarations, imports, and class names.
 Changing `mod_package` only changes processed resource text; it does not refactor Java sources or ServiceLoader descriptors.
@@ -69,6 +70,30 @@ After choosing the final mod ID and Java package, consider replacing stable iden
 Release metadata may remain parameterized, including versions, display text, authors, URLs, licenses, and compatibility ranges.
 Hardcoding stable identity paths is an IDE usability recommendation, not a runtime requirement.
 
+## Configuration Layers
+
+`gradle.properties` is the single place for versions, development defaults, and shared mod metadata.
+Platform-specific values keep their platform prefix so their ownership stays obvious when referenced from Gradle scripts.
+
+| Prefix / name | Purpose |
+|---|---|
+| `minecraft_*`, `java_version`, `username` | Shared Minecraft and development environment |
+| `fabric_*` | Fabric-only build tools, loader, and API versions |
+| `neoforge_*` | NeoForge-only build tools, platform version, and JavaFML compatibility |
+| `mixin_*` | Shared Mixin and MixinExtras versions |
+| `mod_*` | Shared Fabric and NeoForge mod metadata |
+
+The NeoForge version properties describe different layers rather than four interchangeable platform versions:
+
+```text
+neoforge_moddev_version           ModDevGradle development plugin
+neoforge_neoform_version          Minecraft development artifact / transformations
+neoforge_version                  NeoForge platform version
+neoforge_javafml_version_range    javafml language-loader compatibility range
+```
+
+`neoforge_javafml_version_range` is written to `loaderVersion` next to `modLoader="javafml"`; it is not the NeoForge platform version range.
+
 ## Mixins and Access Changes
 
 Mixin configurations are separated by responsibility:
@@ -88,6 +113,9 @@ common/src/main/resources/template.classtweaker
 common/src/main/resources/META-INF/accesstransformer.cfg
 ```
 
+`mixin_min_version` and `java_version` are expanded into every Mixin configuration, so their minimum Mixin version and Java compatibility level stay synchronized from `gradle.properties`.
+The NeoForge Access Transformer is also declared explicitly in `neoforge.mods.toml`.
+
 When common code depends on an access change, keep the Fabric class tweaker and NeoForge Access Transformer semantically equivalent.
 Validate the Fabric file with:
 
@@ -97,17 +125,24 @@ Validate the Fabric file with:
 
 ## Build and Test
 
+Use the combined build, validation, and publication smoke test:
+
 ```shell
-./gradlew clean build
-./gradlew :fabric:runClient
-./gradlew :neoforge:runClient
-./gradlew :fabric:runServer
-./gradlew :neoforge:runServer
+./gradlew clean build :fabric:validateAccessWidener publishToMavenLocal --warning-mode all
 ```
+
+Then run the four runtime environments in sequence:
+
+```shell
+./gradlew :fabric:runClient :neoforge:runClient :fabric:runServer :neoforge:runServer
+```
+
+Close each client normally to continue to the next run.
+For each dedicated server, wait for the `Done` message and enter `stop` for a clean shutdown.
 
 Both client runs use `username` from `gradle.properties`.
 A client run does not replace dedicated-server testing because an integrated single-player server still runs inside a physical client process.
-For NeoForge, ANSI output remains enabled for the dedicated server while JLine is disabled; the `runServer` Gradle task explicitly forwards standard input so `stop` can be entered for a clean shutdown after the `Done` message.
+For NeoForge, ANSI output remains enabled for the dedicated server while JLine is disabled; the `runServer` Gradle task explicitly forwards standard input so server commands such as `stop` work without the repeated JLine prompt.
 
 Build outputs are written under each project's `build/libs` directory.
 The `common` publication contains only `common/src/main`; shared client classes and their sources are included in the Fabric and NeoForge outputs.
