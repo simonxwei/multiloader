@@ -34,6 +34,27 @@ The template version may exist only in the release tag and title, while `mod_ver
 One tag records the tested common, Fabric, and NeoForge template state from the same commit.
 Template releases may use stable versions directly; prerelease suffixes are only needed for intentionally experimental public builds.
 
+## Versioning
+
+Template versions are scoped to each Minecraft version branch.
+The first stable template release for a new Minecraft version starts at `1.0.0`, regardless of the latest template version on an older Minecraft branch. Patch and minor versions then advance independently within that Minecraft version line.
+
+For example:
+
+```text
+26.2
+├─ mc26.2-1.0.0
+├─ mc26.2-1.0.1
+└─ mc26.2-1.1.0
+
+26.3
+├─ mc26.3-1.0.0
+├─ mc26.3-1.0.1
+└─ mc26.3-1.1.0
+```
+
+A new Minecraft version therefore starts a new template-version sequence; template versions are not continued globally across Minecraft version branches.
+
 ## Verify
 
 Run the combined build, access validation, publication smoke test, and Gradle deprecation check from the repository root:
@@ -58,7 +79,7 @@ The build also validates NeoForge Access Transformer targets.
 1. Complete and verify the intended commit on `dev`.
 2. Create or update the branch named with the target `minecraft_version`.
 3. Push the tested version branch.
-4. Choose a template version independently of `mod_version`.
+4. Choose a template version independently of `mod_version`; for the first stable release of a new Minecraft version, use `1.0.0`.
 5. Create `mc<minecraft_version>-<template_version>` from the tested commit.
 6. Create a GitHub Release titled `multiloader <template_version> for Minecraft <minecraft_version>`.
 
