@@ -12,22 +12,25 @@ See [Releasing](RELEASING.md) for versions, tags, and publication.
 2. Open the repository in a Java IDE (IntelliJ IDEA is recommended) and import the Gradle project.
 3. Use the included Gradle wrapper; a separate Gradle installation is unnecessary.
 
-Run Gradle commands from the repository root. On Windows, use `gradlew.bat` in Command Prompt or PowerShell instead of `./gradlew` where appropriate.
+Run Gradle commands from the repository root.
+On Windows, use `gradlew.bat` in Command Prompt or PowerShell instead of `./gradlew` where appropriate.
 
 ## Create a Mod
 
 Work through this checklist when copying the template into a new project:
 
-1. Rename `rootProject.name` in `settings.gradle`. Set the Minecraft, Java, loader, Mixin, and `mod_*` properties in `gradle.properties`; replace the example repository links and license as needed.
+1. Rename `rootProject.name` in `settings.gradle`. Set the Minecraft, Java, loader, Mixin, and `mod_*` properties in `gradle.properties`. Replace the example repository links and license as needed.
 2. Use the IDE to refactor the Java package and `Template*` classes, including imports, client entrypoints, and data generators. Changing `mod_package` alone does **not** rename Java sources.
 3. Update `TemplateConstants.MOD_ID` and `MOD_NAME` to match `gradle.properties`. Keep the mod ID, Java package, and source-level project prefix distinct.
-4. Rename `META-INF/services` descriptor **filenames and provider names**. Update the Mixin JSON filenames and `package` fields, Fabric class-tweaker filename, and all corresponding loader-metadata references.
-5. Replace template code, icons, banner, and README. Edit data providers rather than generated JSON; regenerate data and remove obsolete example files. Keep only useful `.gitkeep` placeholders.
+4. Rename `META-INF/services` descriptor **filenames and provider names**. Update Mixin JSON filenames and `package` fields, the Fabric class-tweaker filename, and all corresponding loader-metadata references.
+5. Replace template code, icons, banner, and README. Edit data providers rather than generated JSON; regenerate data and remove obsolete examples. Keep only useful `.gitkeep` placeholders.
 6. Refresh Gradle and complete the [build and runtime checks](#build-and-test) for both loaders.
 
-`mod_version=1.0.0` is a **starter example for a mod**, not the Multiloader template's release version. Set an appropriate version for the new project; see [Releasing](RELEASING.md#choose-a-version-and-target).
+`mod_version=1.0.0` is a **starter example for a mod**, not the multiloader's release version.
+Set an appropriate version for the new project; see [Releasing](RELEASING.md#choose-a-version-and-target).
 
-**Check:** Search for obsolete package names, `Template*` identifiers, old mod IDs, and mismatched metadata references before the first commit.
+**Check:** Search for obsolete package names, `Template*` identifiers, old mod IDs,
+and mismatched metadata references before the first commit.
 
 ## Make a Change
 
@@ -44,14 +47,14 @@ For isolated work, create a branch from `dev`:
 ```shell
 git switch dev
 git pull --ff-only origin dev
-git switch -c feature/<topic>
+git switch -c feature/example-change
 # Edit and verify the files.
 git status
 git diff --check
 git add -A
 git diff --cached --stat
 git commit -m "feat: describe the change"
-git push -u origin feature/<topic>
+git push -u origin feature/example-change
 ```
 
 Replace the sample branch and commit message.
@@ -74,22 +77,27 @@ Use lightweight [Conventional Commits](https://www.conventionalcommits.org/en/v1
 | `build` / `ci`      | Dependencies or Gradle / automation workflows |
 | `chore`             | Other maintenance                             |
 
-Examples: `feat(worldgen): add cliff texture operator`, `fix: correct material rule precedence`, `docs: clarify release versioning`.
+Examples: `feat(worldgen): add cliff texture operator`, `fix: correct material rule precedence`,
+and `docs: clarify release versioning`.
 
 Make each commit independently understandable, even when it changes several files.
-Do not mix unrelated work to reduce commit count. A scope is optional; use a body for non-obvious reasoning.
+Do not mix unrelated work to reduce commit count.
+A scope is optional; use a body for non-obvious reasoning.
 Mark breaking changes with `!` or a `BREAKING CHANGE:` footer where relevant.
 Commit types do **not** automatically determine release versions.
 
 ### Pull Requests and Issues
 
 **PR:** Open one when a change needs review, an isolated CI run, discussion, or approval under branch rules.
-Use a descriptive title (preferably the commit format), explain **what** changed and **why**, link relevant issues, and state the checks actually performed.
+Use a descriptive title (preferably the commit format) and explain **what** changed and **why**.
+Link relevant issues and state the checks actually performed.
 Review the diff and checks before merging.
 Use **Squash and merge** when several intermediate commits form one logical change.
 
 **Issue:** Create one for bugs, features, or investigations worth tracking; routine edits need none.
-For bugs, include the Minecraft version, loader, reproduction steps, expected/actual behavior, and relevant logs. For proposals, describe the goal and acceptance conditions.
+For bugs, include the Minecraft version, loader, reproduction steps, expected/actual behavior,
+and relevant logs.
+For proposals, describe the goal and acceptance conditions.
 Use labels and comments to track findings; link PRs and close the issue when resolved or declined.
 
 ## Build and Test
@@ -117,7 +125,9 @@ Remove stale examples.
 NeoForge run configurations can forward console input such as `stop`.
 
 Find outputs under each project's `build/libs/`.
-GitHub Actions builds on pushes and PRs, validates Fabric access changes, checks Maven-local publication, and uploads CI artifacts; it does **not** publish a GitHub Release or upload to Modrinth/CurseForge.
+GitHub Actions builds on pushes and PRs, validates Fabric access changes,
+checks Maven-local publication, and uploads CI artifacts.
+It does **not** publish GitHub Releases or upload to Modrinth/CurseForge.
 
 ## Synchronize Minecraft Branches
 
@@ -130,31 +140,32 @@ Choose the method **before** synchronizing:
 | Both branches have independent commits and should combine their histories           | Reviewed merge     |
 | Only selected changes apply to an older/different Minecraft version                 | Cherry-pick        |
 
-For the first case, after pushing the updates to `dev`:
+For the first case, push the updates to `dev`, then replace `MC_BRANCH` with the actual branch name:
 
 ```shell
 git fetch origin
-git switch <minecraft_version>
-git pull --ff-only origin <minecraft_version>
+git switch MC_BRANCH
+git pull --ff-only origin MC_BRANCH
 git merge --ff-only origin/dev
-git push origin <minecraft_version>
+git push origin MC_BRANCH
 ```
 
 **Check:** Confirm the target branch now points to the expected commit, and that CI passes.
 
 For a documentation fix or other selected change, apply only the appropriate commit to the destination branch.
-Replace the placeholders before running these commands:
+Replace `MC_BRANCH` and `COMMIT_SHA` before running these commands:
 
 ```shell
 git fetch origin
-git switch <minecraft_version>
-git pull --ff-only origin <minecraft_version>
-git cherry-pick <commit-sha>
-git push origin <minecraft_version>
+git switch MC_BRANCH
+git pull --ff-only origin MC_BRANCH
+git cherry-pick COMMIT_SHA
+git push origin MC_BRANCH
 ```
 
 Cherry-pick creates a new commit on the target branch.
-If a PR is required, create a temporary branch **from the destination branch**, cherry-pick there, and open the PR back into that destination.
+If a PR is required, create a temporary branch **from the destination branch**,
+cherry-pick there, and open the PR back into that destination.
 A PR from `dev` into an older Minecraft branch can also merge unwanted Gradle, API, and dependency changes.
 
 **Do not** blindly merge APIs or loader dependencies for a newer Minecraft release into an older branch.
@@ -174,7 +185,8 @@ See [Releasing](RELEASING.md#maintain-released-versions) for backports and tags.
 | `neoforge/src/main/` | NeoForge integration and Dist-aware client initialization |
 
 Never reference loader APIs or client-only Minecraft types from `common/src/main/`.
-Fabric separates client sources; NeoForge includes shared client code in its universal output and guards client initialization.
+Fabric separates client sources; NeoForge includes shared client code in its universal output
+and guards client initialization.
 Keep platform-specific behavior in platform modules or service implementations.
 
 ### Configuration and Resources
@@ -187,14 +199,18 @@ Keep platform-specific behavior in platform modules or service implementations.
 | `mod_*`                                   | Identity, artifact coordinates, and metadata     |
 
 Keep actual Minecraft and dependency versions in the branch's Gradle configuration, not in reusable comments or rules.
-NeoForge's `neoforge_moddev_version`, `neoforge_neoform_version`, `neoforge_version`, and `neoforge_javafml_version_range` refer to distinct tooling, development artifact, platform, and language-loader layers.
+NeoForge's `neoforge_moddev_version`, `neoforge_neoform_version`, `neoforge_version`,
+and `neoforge_javafml_version_range` refer to distinct tooling, development artifact,
+platform, and language-loader layers.
 
 Gradle expands selected `${mod_id}` and `${mod_package}` values in resources, but does not rename Java types.
-Keep Fabric class-tweaker and NeoForge Access Transformer changes semantically equivalent when shared code needs the same access.
+Keep Fabric class-tweaker and NeoForge Access Transformer changes semantically equivalent
+when shared code needs the same access.
 
 Git cannot track empty directories.
 Use `.gitkeep` only for intentional empty locations; remove it when real files arrive.
-The template reserves Mixin paths under `common/src/main`, `common/src/client`, `fabric/src/main`, `fabric/src/client`, and `neoforge/src/main`.
+The template reserves Mixin paths under `common/src/main`, `common/src/client`,
+`fabric/src/main`, `fabric/src/client`, and `neoforge/src/main`.
 The shared Gradle rules exclude `**/.gitkeep` from JARs (including sources JARs) and Javadoc.
 Never list it as a Mixin or place it in a resource root without checking packaging.
 
@@ -216,24 +232,25 @@ Do not add wrappers or duplicate vanilla behavior merely to satisfy naming symme
 | New injected Mixin member / bridge method | Full mod ID + `$` (for example, `modid$cachedValue`); use `@Unique` as needed                                                      |
 | Ordinary Java member                      | Standard camelCase, without the Mixin `$` convention                                                                               |
 
-The Common initialization class holds shared logic; Fabric and NeoForge classes are loader entrypoints.
+The Common initialization class holds shared logic.
+Fabric and NeoForge classes are loader entrypoints.
 `@Shadow` members must follow their actual mapped targets.
 Injected Mixin names need collision protection because multiple mods can modify the same target class.
 
 ### Comments and Javadoc
 
-- **Comment only what matters:** template replacement points, non-obvious intent, loader or client-side constraints, and upstream references. Remove comments that merely restate code.
-- **Keep comments short:** use English sentence case, one clear sentence per comment when practical, with a final period. Put comments immediately above the relevant statement; split longer explanations by meaning, not by arbitrary line width.
-- **Give actionable instructions:** use a brief imperative at template customization points (for example, `// Rename this project when creating a mod.`). Keep full procedures in this guide.
-- **Use native syntax:** `//` for Java and Groovy; `#` for Gradle properties, YAML, and configuration files. Use plain `#` section headings in `gradle.properties`. Keep useful upstream URLs unchanged; no trailing punctuation is needed on a URL-only reference.
-- **Avoid invalid or generated edits:** do not add instructional comments to JSON, ServiceLoader descriptors, or generated resources. Update or remove stale comments when code changes.
-- **Use Javadoc for navigation:** add class-level `@see` and `@author` for clear vanilla counterparts, and method-level `{@link ...}` where useful. Link to actual mapped members; omit routine Javadoc on original helpers and Mixin types.
+- **Explain what matters:** template replacement points, non-obvious intent, loader or client-side constraints, and upstream references. Remove comments that merely restate code.
+- **Keep comments brief:** use English sentence case and preferably one sentence per comment, ending with a period. Put each distinct sentence on a separate source line. Wrap long sentences at natural clause boundaries without splitting words, identifiers, links, or code spans. Place comments immediately above the relevant code.
+- **Use actionable wording:** write short imperatives at template customization points(for example, `// Rename this project when creating a mod.`). Keep full procedures in this guide.
+- **Follow file syntax:** use `//` for Java/Groovy and `#` for YAML and properties comments. In `gradle.properties`, use `#` for section headings and `##` for per-property notes. Preserve useful upstream URLs; do not append punctuation to URL-only lines.
+- **Avoid generated content:** do not add instructional comments to JSON, ServiceLoader descriptors, or generated resources. Update or remove stale comments when code changes.
+- **Keep Javadoc navigational:** use `@see` and `@author` for clear vanilla counterparts, and `{@link ...}` for corresponding methods where useful. Link to actual mapped members; omit routine Javadoc on unrelated helpers and Mixin types.
 
 ### Exceptions and Modifiers
 
 - Choose `IllegalArgumentException` for bad inputs, `IllegalStateException` for invalid state, and `UnsupportedOperationException` only for unsupported operations.
-- Exception messages use concise English sentence case, no trailing period and no redundant `Error:` prefix. Include actual values when helpful; do not hide invariant violations with fallbacks.
-- Declare method and constructor parameters `final` by default; declare concrete classes `final` unless inheritance is intentional. Local-variable `final` is optional. Use minimal required visibility; static utility classes normally have private constructors.
+- Exception messages use concise English sentence case, with no trailing period or redundant `Error:` prefix. Include actual values when helpful; do not hide invariant violations with fallbacks.
+- Declare method and constructor parameters `final` by default, and concrete classes `final` unless inheritance is intentional. Local-variable `final` is optional. Use minimal required visibility; static utility classes normally have private constructors.
 
 ```java
 throw new IllegalArgumentException("Material rule sequence must not be empty");
@@ -242,12 +259,14 @@ Objects.requireNonNull(source, "source");
 ```
 
 **IDE note:** Dynamic Gradle/Groovy DSL methods may trigger IntelliJ inspections even when builds succeed.
-Verify actual Gradle errors before changing scripts; do not suppress inspections globally or rename valid APIs solely to silence them.
+Verify actual Gradle errors before changing scripts.
+Do not suppress inspections globally or rename valid APIs solely to silence them.
 
 ## Maven Publication
 
 `publishToMavenLocal` writes to the user's local Maven repository (normally `~/.m2/repository`).
-The root `publish` task publishes `common`, Fabric, and NeoForge to the project-root `repo/` by default; `local_maven_url` can override that destination.
+The root `publish` task publishes `common`, Fabric, and NeoForge to the project-root `repo/` by default.
+`local_maven_url` can override that destination.
 The published `common` component contains shared main sources; loader builds incorporate the applicable shared client sources.
 Neither command automatically creates a GitHub Release or publishes to a mod distribution service.
 See [Releasing](RELEASING.md) for release steps.

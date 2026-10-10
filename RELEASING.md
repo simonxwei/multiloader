@@ -1,6 +1,6 @@
 # Release Guide
 
-Use this checklist to release either the Multiloader template or a mod created from it.
+Use this checklist to release either the multiloader template or a mod created from it.
 **Template release versions and derived-mod versions are independent.**
 
 See [Development](DEVELOPMENT.md) for daily commits, PRs, and branch synchronization.
@@ -20,7 +20,8 @@ See [Development](DEVELOPMENT.md) for daily commits, PRs, and branch synchroniza
 | Release title    | `<project_name> <project_version> for Minecraft <minecraft_version>` |
 
 The Minecraft prefix identifies compatibility; **do not reset the project's version sequence** when Minecraft changes.
-The same project version may target multiple Minecraft versions when the feature baseline is equivalent; implementation, dependencies, and Gradle configuration can differ.
+The same project version may target multiple Minecraft versions when the feature baseline is equivalent.
+Implementation, dependencies, and Gradle configuration can differ.
 Older maintained branches may remain on an earlier version series and receive their own updates.
 For example, `mc26.2-0.1.4` may be released after `mc26.3-0.2.0` as a fix to the older feature series.
 
@@ -28,7 +29,7 @@ Use `-alpha.1` for early tests, `-beta.1` for wider tests, or `-rc.1` for releas
 These suffixes are optional even in `0.x.x`; mark such GitHub Releases as **Pre-release**.
 See [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**Template:** Multiloader starts at `0.1.0` and intentionally remains in `0.x.x`.
+**Template:** multiloader starts at `0.1.0` and intentionally remains in `0.x.x`.
 Use Minor for meaningful capabilities or structural changes and Patch for smaller fixes.
 Its policy does not restrict derived mods from reaching `1.0.0`.
 
@@ -53,7 +54,7 @@ The template's `mod_version=1.0.0` is only a starter example; it is **not** the 
    ./gradlew :neoforge:runServer
    ```
 
-4. Run relevant data-generation, persistence, networking, and migration tests. Inspect the output JARs, generated resources, license, version metadata, and release notes.
+4. Run relevant data-generation, persistence, networking, and migration tests. Inspect output JARs, generated resources, license, version metadata, and release notes.
 5. If Maven publication applies, check metadata and artifacts with `./gradlew publishToMavenLocal --warning-mode all`.
 
 **Check:** A successful build is not proof of runtime compatibility.
@@ -63,7 +64,8 @@ If world data may change, provide backup or migration instructions.
 ## Check Generated Artifacts
 
 Gradle names JARs from the project configuration, not from the Git tag.
-Its shared conventions use `${mod_version}+mc${minecraft_version}` for the build version and `${mod_id}-${project.name}` for the archive name:
+Its shared conventions use `${mod_version}+mc${minecraft_version}` for the build version
+and `${mod_id}-${project.name}` for the archive name:
 
 ```text
 <mod_id>-fabric-<mod_version>+mc<minecraft_version>.jar
@@ -97,7 +99,7 @@ Known limitations: <if any>
 
 ### Before Enabling Immutable Releases
 
-GitHub [Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) can protect a published tag, attached artifacts, and release provenance.
+GitHub [Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)can protect a published tag, attached artifacts, and release provenance.
 **It is optional; ordinary tag naming does not require it.**
 
 - The setting applies to future published Releases, not retroactively.
@@ -113,7 +115,7 @@ Correct a published version with a **new version and tag**, not by moving an exi
 
 - Keep published tags stable and create a new tag for fixes.
 - Merge `dev` into the corresponding Minecraft branch only when the history and all changes are compatible. Use fast-forward for linear histories; choose reviewed merges or selective `cherry-pick` when histories differ.
-- Backport selected commits or reimplement their intent when Minecraft APIs differ; `cherry-pick` does not adapt code automatically. Do not merge an entire newer branch just to transfer a doc or bug fix.
+- Backport selected commits or reimplement their intent when Minecraft APIs differ.`cherry-pick` does not adapt code automatically. Do not merge an entire newer branch just to transfer a doc or bug fix.
 - Give two Minecraft builds the same project version only when their advertised feature baseline is equivalent. Older branches may retain an earlier feature series; verify and test each port independently.
 - Do not force-push protected or published branch history to make branches match. Respect branch rules requiring PRs and checks.
 

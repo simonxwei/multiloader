@@ -1,4 +1,4 @@
-<img src="common/src/main/resources/banner.png" width="128" alt="mod icon">
+<img src="common/src/main/resources/icon.png" width="128" alt="mod icon">
 
 # multiloader
 
@@ -35,7 +35,7 @@ Follow the complete [setup checklist](DEVELOPMENT.md#create-a-mod) before using 
 ## Upstream
 
 Based on [Jaredlll08's MultiLoader Template](https://github.com/jaredlll08/MultiLoader-Template) and maintained independently.
-Not an official Fabric, NeoForge, or upstream MultiLoader project.
+Not an official Fabric, NeoForge, or upstream MultiLoader Template project.
 
 ## License
 
