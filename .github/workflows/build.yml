@@ -1,4 +1,4 @@
-# Automatically build all three projects for every push and pull request.
+# Build and validate all modules on pushes and pull requests.
 name: build
 on: [pull_request, push]
 

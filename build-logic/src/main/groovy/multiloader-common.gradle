@@ -42,9 +42,7 @@ dependencies {
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
 }
 
-// Expand the shared Java package in every Mixin configuration.
-// This also covers Fabric client resources, which are processed
-// by a separate resource task.
+// Expand Mixin placeholders across main and client resource tasks.
 def commonResourceProperties = [
         mod_package      : mod_package,
         mixin_min_version: mixin_min_version,
@@ -65,7 +63,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 tasks.withType(Javadoc).configureEach {
-    // Keep Git directory placeholders out of Javadoc sources.
+    // Exclude Git placeholders from generated Javadoc.
     exclude('**/.gitkeep')
 
     options.encoding = 'UTF-8'
@@ -76,8 +74,7 @@ tasks.withType(Javadoc).configureEach {
 }
 
 tasks.withType(Jar).configureEach {
-    // Keep Git directory placeholders out of binary
-    // and source archives.
+    // Exclude Git placeholders from binary and source JARs.
     exclude('**/.gitkeep')
 
     from(rootProject.file('LICENSE')) {
@@ -99,9 +96,7 @@ tasks.named('jar', Jar).configure {
     }
 }
 
-// The three projects form one publication set.
-// Running the root `publish` or `publishToMavenLocal` task therefore
-// publishes common, Fabric and NeoForge together.
+// Root publication tasks include common, Fabric, and NeoForge.
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
@@ -111,18 +106,17 @@ publishing {
     }
 
     repositories {
-        // By default, `publish` writes all three publications to the root repo/ directory.
-        // Set local_maven_url to redirect the same publication set elsewhere.
+        // Publish to repo/ unless local_maven_url overrides the destination.
         maven {
             name = 'local'
             url = uri(System.getenv('local_maven_url') ?: rootProject.file('repo'))
         }
 
-        // Add shared remote publication repositories here when needed.
+        // Add remote Maven repositories here when needed.
     }
 }
 
-// Download dependency sources and Javadocs for IDE navigation.
+// Download dependency sources and Javadoc for IDE navigation.
 idea {
     module {
         downloadSources = true

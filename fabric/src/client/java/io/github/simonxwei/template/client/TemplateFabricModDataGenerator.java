@@ -11,6 +11,6 @@ public final class TemplateFabricModDataGenerator implements DataGeneratorEntryp
     @Override
     public void onInitializeDataGenerator(final FabricDataGenerator fabricDataGenerator) {
         final FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        // Add Fabric data generator providers here.
+        // Register Fabric data providers here.
     }
 }

@@ -29,9 +29,7 @@ fabricApi {
 }
 
 dependencies {
-    // Expose the shared client output to Gradle's IDE model.
-    // The raw shared client sources are still compiled into
-    // this loader's client output.
+    // Expose shared client output to IDE resolution; compile sources below.
     clientCompileOnly this.project(':common').sourceSets.client.output
 
     minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -65,8 +63,7 @@ processResources {
     }
 }
 
-// Fabric compiles shared client code through Loom's client source set,
-// preserving compile-time protection for both Fabric and common main.
+// Compile shared client sources separately to preserve physical-side isolation.
 tasks.named('compileClientJava', JavaCompile).configure {
     source(configurations.commonClientJava)
 }
@@ -80,9 +77,8 @@ tasks.named('javadoc', Javadoc).configure {
     classpath += sourceSets.client.compileClasspath
 }
 
-// multiloader: identify Fabric-compatible incoming and outgoing variants.
-// This follows the mcgradleconventions loader attribute used by the upstream
-// MultiLoader Template and interoperable multiloader tooling.
+// Match the loader attribute used by compatible multiloader tooling.
+// See https://github.com/mcgradleconventions
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
 
 ['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements',

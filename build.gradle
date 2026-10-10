@@ -6,6 +6,6 @@ plugins {
 }
 
 tasks.named('wrapper', Wrapper).configure {
-    // Use BIN to keep the wrapper small; use ALL when Gradle sources are needed.
+    // BIN minimizes downloads; use ALL when Gradle sources are needed.
     distributionType = Wrapper.DistributionType.BIN
 }
