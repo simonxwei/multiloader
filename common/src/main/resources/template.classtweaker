@@ -1,0 +1,4 @@
+classTweaker v1 official
+
+# Keep access-widening entries semantically equivalent to
+# META-INF/accesstransformer.cfg.

@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "minVersion": "${mixin_min_version}",
+    "package": "${mod_package}.client.mixin",
+    "compatibilityLevel": "JAVA_${java_version}",
+    "client": [],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "requireAnnotations": true
+    }
+}

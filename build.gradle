@@ -1,0 +1,11 @@
+plugins {
+    // See https://maven.fabricmc.net/fabric-loom/fabric-loom.gradle.plugin/maven-metadata.xml
+    id 'net.fabricmc.fabric-loom' version "${fabric_loom_version}" apply false
+    // See https://projects.neoforged.net/neoforged/moddevgradle
+    id 'net.neoforged.moddev' version "${neoforge_moddev_version}" apply false
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    // Use BIN to keep the wrapper small; use ALL when Gradle sources are needed.
+    distributionType = Wrapper.DistributionType.BIN
+}
