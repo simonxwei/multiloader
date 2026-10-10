@@ -241,7 +241,7 @@ Injected Mixin names need collision protection because multiple mods can modify 
 
 - **Explain what matters:** template replacement points, non-obvious intent, loader or client-side constraints, and upstream references. Remove comments that merely restate code.
 - **Keep comments brief:** use English sentence case and preferably one sentence per comment, ending with a period. Put each distinct sentence on a separate source line. Wrap long sentences at natural clause boundaries without splitting words, identifiers, links, or code spans. Place comments immediately above the relevant code.
-- **Use actionable wording:** write short imperatives at template customization points(for example, `// Rename this project when creating a mod.`). Keep full procedures in this guide.
+- **Use actionable wording:** write short imperatives at template customization points (for example, `// Rename this project when creating a mod.`). Keep full procedures in this guide.
 - **Follow file syntax:** use `//` for Java/Groovy and `#` for YAML and properties comments. In `gradle.properties`, use `#` for section headings and `##` for per-property notes. Preserve useful upstream URLs; do not append punctuation to URL-only lines.
 - **Avoid generated content:** do not add instructional comments to JSON, ServiceLoader descriptors, or generated resources. Update or remove stale comments when code changes.
 - **Keep Javadoc navigational:** use `@see` and `@author` for clear vanilla counterparts, and `{@link ...}` for corresponding methods where useful. Link to actual mapped members; omit routine Javadoc on unrelated helpers and Mixin types.

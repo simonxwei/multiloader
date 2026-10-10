@@ -99,7 +99,7 @@ Known limitations: <if any>
 
 ### Before Enabling Immutable Releases
 
-GitHub [Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)can protect a published tag, attached artifacts, and release provenance.
+GitHub [Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) can protect a published tag, attached artifacts, and release provenance.
 **It is optional; ordinary tag naming does not require it.**
 
 - The setting applies to future published Releases, not retroactively.
@@ -115,7 +115,7 @@ Correct a published version with a **new version and tag**, not by moving an exi
 
 - Keep published tags stable and create a new tag for fixes.
 - Merge `dev` into the corresponding Minecraft branch only when the history and all changes are compatible. Use fast-forward for linear histories; choose reviewed merges or selective `cherry-pick` when histories differ.
-- Backport selected commits or reimplement their intent when Minecraft APIs differ.`cherry-pick` does not adapt code automatically. Do not merge an entire newer branch just to transfer a doc or bug fix.
+- Backport selected commits or reimplement their intent when Minecraft APIs differ. `cherry-pick` does not adapt code automatically. Do not merge an entire newer branch just to transfer a doc or bug fix.
 - Give two Minecraft builds the same project version only when their advertised feature baseline is equivalent. Older branches may retain an earlier feature series; verify and test each port independently.
 - Do not force-push protected or published branch history to make branches match. Respect branch rules requiring PRs and checks.
 
