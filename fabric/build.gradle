@@ -28,6 +28,12 @@ fabricApi {
     }
 }
 
+sourceSets.main.resources {
+    // Exclude development-only assets from packaged resources.
+    exclude('**/*.bbmodel')
+    exclude('**/.cache/**')
+}
+
 dependencies {
     // Expose shared client output to IDE resolution; compile sources below.
     clientCompileOnly this.project(':common').sourceSets.client.output
