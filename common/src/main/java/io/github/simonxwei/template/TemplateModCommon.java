@@ -2,13 +2,17 @@ package io.github.simonxwei.template;
 
 import io.github.simonxwei.template.platform.TemplateServices;
 
-public final class TemplateCommonMod {
+/**
+ * @see net.minecraft.server.Bootstrap
+ * @see net.minecraft.core.registries.BuiltInRegistries
+ */
+public final class TemplateModCommon {
 
-    private TemplateCommonMod() {}
+    private TemplateModCommon() {}
 
     public static void init() {
         TemplateConstants.LOGGER.info(
-                "Initializing {} on {} ({})",
+                "TemplateModCommon#init(): initializing '{}' on '{}' ('{}')",
                 TemplateConstants.MOD_NAME,
                 TemplateServices.PLATFORM.getPlatformName(),
                 TemplateServices.PLATFORM.getEnvironmentName()

@@ -6,11 +6,15 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 
+/**
+ * @see net.minecraft.server.Bootstrap
+ * @see net.minecraft.core.registries.BuiltInRegistries
+ */
 @Mod(TemplateConstants.MOD_ID)
-public final class TemplateNeoForgeMod {
+public final class TemplateMod {
 
-    public TemplateNeoForgeMod(final IEventBus modEventBus, final ModContainer modContainer) {
-        TemplateCommonMod.init();
+    public TemplateMod(final IEventBus modEventBus, final ModContainer modContainer) {
+        TemplateModCommon.init();
         modContainer.registerConfig(ModConfig.Type.LOCAL, TemplateConfig.SPEC);
     }
 }

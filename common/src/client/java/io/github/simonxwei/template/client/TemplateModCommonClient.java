@@ -4,20 +4,23 @@ import io.github.simonxwei.template.TemplateConstants;
 import io.github.simonxwei.template.platform.TemplateServices;
 import net.minecraft.client.Minecraft;
 
-public final class TemplateCommonModClient {
+/**
+ * @see net.minecraft.client.ClientBootstrap
+ */
+public final class TemplateModCommonClient {
 
-    private TemplateCommonModClient() {}
+    private TemplateModCommonClient() {}
 
     public static void init() {
         TemplateConstants.LOGGER.info(
-                "Initializing {} client on {} ({})",
+                "TemplateModCommonClient#init(): initializing '{}' client on '{}' ('{}')",
                 TemplateConstants.MOD_NAME,
                 TemplateServices.PLATFORM.getPlatformName(),
                 TemplateServices.PLATFORM.getEnvironmentName()
         );
 
         TemplateConstants.LOGGER.debug(
-                "Shared client links against {}", Minecraft.class.getName()
+                "TemplateModCommonClient#init(): shared client links against '{}'", Minecraft.class.getName()
         );
     }
 }

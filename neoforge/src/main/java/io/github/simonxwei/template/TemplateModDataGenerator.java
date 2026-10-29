@@ -5,10 +5,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
+/**
+ * @see net.minecraft.data.Main
+ * @see net.minecraft.client.data.Main
+ */
 @EventBusSubscriber(modid = TemplateConstants.MOD_ID)
-public final class TemplateNeoForgeModDataGenerator {
+public final class TemplateModDataGenerator {
 
-    private TemplateNeoForgeModDataGenerator() {}
+    private TemplateModDataGenerator() {}
 
     @SubscribeEvent
     public static void gatherData(final GatherDataEvent.Client event) {
