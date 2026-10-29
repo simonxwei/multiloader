@@ -6,18 +6,18 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public final class NeoForgeENUSLanguageProvider extends LanguageProvider {
 
-    private static final String TITLE = TemplateConstants.MOD_NAME + " Configs";
-    private static final String CONFIGURATION = TemplateConstants.MOD_ID + ".configuration";
-    private static final String SECTION = CONFIGURATION + ".section." + TemplateConstants.MOD_ID + ".local.toml";
+    // See https://neoforged.net/mod-generator/
+    private static final String TITLE = TemplateConstants.MOD_NAME + " " + "Configs";
 
     public NeoForgeENUSLanguageProvider(final PackOutput output) {
-        super(output, TemplateConstants.MOD_ID, "en_us");
+        super(output, TemplateConstants.MOD_ID, TemplateLanguageKeys.EN_US);
     }
 
     @Override
     protected void addTranslations() {
-        this.add(CONFIGURATION + ".title", TITLE);
-        this.add(SECTION, TITLE);
-        this.add(SECTION + ".title", TITLE);
+        TemplateENUSLanguageProvider.add(this::add);
+        this.add(NeoForgeLanguageKeys.CONFIGURATION_TITLE, TITLE);
+        this.add(NeoForgeLanguageKeys.CONFIGURATION_SECTION, TITLE);
+        this.add(NeoForgeLanguageKeys.CONFIGURATION_SECTION_TITLE, TITLE);
     }
 }
