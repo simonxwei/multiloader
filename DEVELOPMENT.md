@@ -177,7 +177,7 @@ TemplateENUSLanguageProvider.add(this::add);
 
 Use callbacks for declaration lists and `TemplateServices` for platform implementations called by Common.
 Platform-specific entries, ordering, and side rules stay with each loader.
-Language codes use `TemplateLanguage.Codes.EN_US`; add a nested `Keys` utility when shared translation keys are needed.
+Language codes use `TemplateLanguage.Codes`, and shared translation keys use `TemplateLanguage.Keys`.
 Keep NeoForge-only keys in `NeoForgeLanguageKeys`.
 Configuration classes and hooks are placeholders; add options and any Fabric configuration dependency when the derived mod needs them.
 
