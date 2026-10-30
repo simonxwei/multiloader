@@ -14,8 +14,8 @@ public final class TemplateModCommon {
         TemplateConstants.LOGGER.info(
                 "TemplateModCommon#init(): initializing '{}' on '{}' ('{}')",
                 TemplateConstants.MOD_NAME,
-                TemplateServices.PLATFORM.getPlatformName(),
-                TemplateServices.PLATFORM.getEnvironmentName()
+                TemplateServices.PLATFORM.template$getPlatformName(),
+                TemplateServices.PLATFORM.template$getEnvironmentName()
         );
     }
 }

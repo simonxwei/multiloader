@@ -8,17 +8,17 @@ public final class FabricPlatformHelper implements TemplatePlatformHelper {
     public FabricPlatformHelper() {}
 
     @Override
-    public String getPlatformName() {
+    public String template$getPlatformName() {
         return "Fabric";
     }
 
     @Override
-    public boolean isModLoaded(final String modId) {
+    public boolean template$isModLoaded(final String modId) {
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 
     @Override
-    public boolean isDevelopmentEnvironment() {
+    public boolean template$isDevelopmentEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 }

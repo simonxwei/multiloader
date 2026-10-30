@@ -9,17 +9,17 @@ public final class NeoForgePlatformHelper implements TemplatePlatformHelper {
     public NeoForgePlatformHelper() {}
 
     @Override
-    public String getPlatformName() {
+    public String template$getPlatformName() {
         return "NeoForge";
     }
 
     @Override
-    public boolean isModLoaded(final String modId) {
+    public boolean template$isModLoaded(final String modId) {
         return ModList.get().isLoaded(modId);
     }
 
     @Override
-    public boolean isDevelopmentEnvironment() {
+    public boolean template$isDevelopmentEnvironment() {
         return !FMLLoader.getCurrent().isProduction();
     }
 }

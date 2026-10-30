@@ -2,13 +2,13 @@ package io.github.simonxwei.template.platform.services;
 
 public interface TemplatePlatformHelper {
 
-    String getPlatformName();
+    String template$getPlatformName();
 
-    boolean isModLoaded(final String modId);
+    boolean template$isModLoaded(final String modId);
 
-    boolean isDevelopmentEnvironment();
+    boolean template$isDevelopmentEnvironment();
 
-    default String getEnvironmentName() {
-        return this.isDevelopmentEnvironment() ? "development" : "production";
+    default String template$getEnvironmentName() {
+        return this.template$isDevelopmentEnvironment() ? "development" : "production";
     }
 }
