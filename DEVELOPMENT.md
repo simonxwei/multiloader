@@ -1,36 +1,36 @@
 # Development Guide
 
-Create, build, and maintain a mod with this template.
-See [Releasing](RELEASING.md) for versions, tags, and publication.
+Use the JDK specified by `java_version` and the included wrapper from the repository root.
+On Windows, replace `./gradlew` with `gradlew.bat`.
+See [Releasing](RELEASING.md) for versions, artifacts, and publication.
 
-## Prepare the Workspace
-
-1. Install a JDK matching `java_version` in `gradle.properties`.
-2. Import the Gradle project into your IDE; IntelliJ IDEA is recommended.
-3. Run the included wrapper from the repository root. On Windows, use `gradlew.bat` in place of `./gradlew`.
+---
 
 ## Create a Mod
 
-| Update                                      | Locations                                                   |
-|---------------------------------------------|-------------------------------------------------------------|
-| Project, versions, identity, links, license | `settings.gradle`, `gradle.properties`, `LICENSE`           |
-| Java package and `Template*` classes        | Refactor in the IDE across all three modules                |
-| Source identity                             | `TemplateConstants.MOD_ID` and `MOD_NAME`                   |
-| Loader entrypoints and resource paths       | `fabric.mod.json`, `neoforge.mods.toml`, Mixin JSON         |
-| Service discovery                           | `META-INF/services` filenames **and** provider names        |
-| Resources                                   | Rename `template.*` files; replace artwork and example data |
-| Documentation                               | Replace README and adapt these guides to the new mod        |
+| Update                                 | Locations                                                                   |
+|----------------------------------------|-----------------------------------------------------------------------------|
+| Identity, dependencies, links, license | `settings.gradle`, `gradle.properties`, `LICENSE`                           |
+| Java package and `Template*` types     | Refactor across all three modules                                           |
+| Source identity                        | `TemplateConstants.MOD_ID` and `MOD_NAME`                                   |
+| Entrypoints and resources              | `fabric.mod.json`, `neoforge.mods.toml`, Mixin JSON, class tweaker, artwork |
+| Service discovery                      | `META-INF/services` filenames and provider names                            |
+| Examples and documentation             | Data providers, generated outputs, artwork, and guides                      |
 
-Class names, Mixin packages, and file references are literal for IDE navigation.
-Changing Gradle properties does not rename sources or resources.
-Edit data providers, regenerate their outputs, and remove obsolete generated examples.
+| Stage                       | Path references                                                                  |
+|-----------------------------|----------------------------------------------------------------------------------|
+| Published template          | Keep `${mod_id}`, `${mod_package}`, `${mod_icon}`, and `${mod_banner}` expansion |
+| Derived mod, after renaming | Use actual class names, Mixin packages, and resource paths for IDE navigation    |
 
-**Check:** Search for old identifiers and broken references, refresh Gradle, then [build and test](#build-and-test) both loaders.
-`mod_version=1.0.0` is a starter mod version, independent of the template's release version.
+Properties do not rename Java types, resource files, or service descriptors.
+For example, changing `mod_id` to `example` also requires renaming `template.mixins.json` to `example.mixins.json` and aligning source constants.
+After resolving path references, remove unused path properties and expansion-map entries; keep metadata and version expansion.
+Edit providers before regenerating data. Remove obsolete generated examples.
+
+**Check:** Search for old identifiers and broken references, refresh Gradle, then [build and test](#build-and-test).
+`mod_version=1.0.0` is a starter mod version, independent of template release tags.
 
 ## Make a Change
-
-For isolated work, start from an updated `dev` branch:
 
 ```shell
 git switch dev
@@ -44,9 +44,9 @@ git commit -m "fix(resources): correct icon path"
 git push -u origin fix/icon-path
 ```
 
-Replace the example branch and message. Make one coherent change per commit.
-Use a PR when review, isolation, or repository rules require it; delete temporary branches after integration.
-Direct updates are appropriate only when repository rules permit them.
+Replace example names. Keep each commit coherent; use a PR when review or repository rules require it.
+Review the diff and CI before merging, squash intermediate commits when appropriate, and delete integrated temporary branches.
+Direct updates require repository rules to permit them.
 
 ### Commit Messages
 
@@ -56,37 +56,34 @@ Use lightweight [Conventional Commits](https://www.conventionalcommits.org/en/v1
 <type>(<optional-scope>): <imperative description>
 ```
 
-| Type                | Use for                          |
-|---------------------|----------------------------------|
-| `feat` / `fix`      | Functionality / bug fixes        |
-| `refactor` / `perf` | Restructuring / performance      |
-| `docs` / `test`     | Documentation / tests            |
-| `build` / `ci`      | Build configuration / automation |
-| `chore`             | Other maintenance                |
+| Type                | Use for                                        |
+|---------------------|------------------------------------------------|
+| `feat` / `fix`      | Functionality / bug fixes                      |
+| `refactor` / `perf` | Restructuring / performance                    |
+| `docs` / `test`     | Documentation / tests                          |
+| `build` / `ci`      | Build configuration, dependencies / automation |
+| `chore`             | Other maintenance                              |
 
 ```text
-refactor: align loader entrypoint names
-fix(resources): correct icon path
-docs: clarify resource renaming
+build(deps): update Fabric API
+refactor(lang): group language codes
+docs: clarify template setup
 ```
 
-Use a body for non-obvious reasoning and `!` or a `BREAKING CHANGE:` footer for breaking changes.
+Add a body for non-obvious reasoning; use `!` or a `BREAKING CHANGE:` footer for breaking changes.
 Commit types do not automatically determine release versions.
 
 ### Pull Requests and Issues
 
-| Item       | Include                                                                           |
-|------------|-----------------------------------------------------------------------------------|
-| PR         | What changed, why, linked issues, checks actually performed                       |
-| Bug report | Minecraft and loader versions, reproduction steps, expected/actual behavior, logs |
-| Proposal   | Goal and acceptance conditions                                                    |
+| Item       | Include                                                            |
+|------------|--------------------------------------------------------------------|
+| PR         | What changed, why, linked issues, checks actually performed        |
+| Bug report | Game/loader versions, reproduction, expected/actual behavior, logs |
+| Proposal   | Goal and acceptance conditions                                     |
 
-Review the diff and CI before merging. Squash intermediate commits that form one logical change.
 Close resolved issues; routine edits need no separate issue.
 
 ## Build and Test
-
-Validate compilation, Fabric access changes, and Maven-local publication:
 
 ```shell
 ./gradlew clean build :fabric:validateAccessWidener publishToMavenLocal --warning-mode all
@@ -101,23 +98,33 @@ Run clients and dedicated servers **one at a time**, verifying startup and clean
 ./gradlew :neoforge:runServer
 ```
 
-A successful build or single-player session does not replace dedicated-server testing.
-After provider changes, run the applicable data-generation tasks and inspect generated resources.
-NeoForge's server run accepts console input such as `stop`.
+A build or single-player session does not replace dedicated-server testing.
+After provider changes, regenerate and inspect resources:
 
-JARs appear in each module's `build/libs/`.
-CI builds, validates Fabric access changes, checks Maven-local publication, and uploads artifacts on pushes and PRs.
-Release publication is a separate step.
+```shell
+./gradlew :fabric:runDatagen
+./gradlew :neoforge:runData
+```
+
+| Output        | Location                            |
+|---------------|-------------------------------------|
+| Fabric data   | `fabric/src/main/generated/`        |
+| NeoForge data | `neoforge/src/generated/resources/` |
+| JARs          | Each module's `build/libs/`         |
+
+NeoForge's server run accepts input such as `stop`.
+CI builds, validates access changes and Maven-local publication, and uploads artifacts on pushes and PRs.
+Publication is separate.
 
 ## Synchronize Minecraft Branches
 
-| Target history and compatibility                             | Method         |
-|--------------------------------------------------------------|----------------|
-| Behind `dev`, no independent commits, all changes compatible | Fast-forward   |
-| Independent commits on both branches, changes compatible     | Reviewed merge |
-| Only selected changes apply                                  | Cherry-pick    |
+| Compatible changes and target history   | Method         |
+|-----------------------------------------|----------------|
+| Behind `dev`, no independent commits    | Fast-forward   |
+| Independent commits on both branches    | Reviewed merge |
+| Only selected changes apply             | Cherry-pick    |
 
-Replace `MC_BRANCH` and `COMMIT_SHA` below. Push the source commits before synchronizing.
+Replace `MC_BRANCH` and `COMMIT_SHA`; push source commits first.
 
 ```shell
 git fetch origin
@@ -125,129 +132,126 @@ git switch MC_BRANCH
 git pull --ff-only origin MC_BRANCH
 ```
 
-Run the chosen operation: `git merge --ff-only origin/dev` for fast-forward, or `git cherry-pick COMMIT_SHA` for selected commits.
-Review, build, and test, then run `git push origin MC_BRANCH`.
-For a required PR, work on a temporary branch created **from the destination branch**.
+Choose `git merge --ff-only origin/dev` or `git cherry-pick COMMIT_SHA` as appropriate.
+Review, build, and test, then `git push origin MC_BRANCH`.
+For a required PR, create the temporary branch **from the destination branch**.
 Cherry-pick creates new commits and does not adapt APIs automatically.
-If fast-forward fails, inspect the histories; do not force-push to make branches match.
-Check the resulting commit and CI. See [Releasing](RELEASING.md#maintain-released-versions) for backports.
+If fast-forward fails, inspect histories instead of force-pushing. Check the resulting commit and CI.
 
 ## Reference: Source Layout
 
-| Location             | Responsibility                                              |
-|----------------------|-------------------------------------------------------------|
-| `build-logic/`       | Shared Gradle conventions                                   |
-| `common/src/main/`   | Loader-independent code for both physical sides             |
-| `common/src/client/` | Shared client-only code                                     |
-| `fabric/src/main/`   | Fabric common-side integration                              |
-| `fabric/src/client/` | Fabric client integration and data generation               |
-| `neoforge/src/main/` | NeoForge integration, with Dist-aware client initialization |
+| Location             | Responsibility                                             |
+|----------------------|------------------------------------------------------------|
+| `build-logic/`       | Shared Gradle conventions                                  |
+| `common/src/main/`   | Loader-independent code for both physical sides            |
+| `common/src/client/` | Shared client-only code                                    |
+| `fabric/src/main/`   | Fabric common-side integration                             |
+| `fabric/src/client/` | Fabric client integration and datagen entrypoint           |
+| `neoforge/src/main/` | NeoForge integration with Dist-aware client initialization |
 
-Common main must not reference loader APIs or client-only types; Common client must not reference loader APIs.
-Fabric separates client sources. NeoForge packages shared client code in its universal JAR and guards client initialization.
+Common main must not import client-only types; neither Common source set may import loader APIs.
+Fabric separates client sources; NeoForge packages shared client code in its universal JAR and guards initialization.
 
 ### Shared Definitions
 
-Maintain shared definitions once; let each loader adapt them at its own lifecycle point.
+Maintain each shared declaration once; adapt it at each loader's lifecycle point.
 
-| Definition in Common                         | Loader responsibility                |
-|----------------------------------------------|--------------------------------------|
-| Registry names, entries, and factories       | Registration API and timing          |
-| Payload types, codecs, and registration list | Registration and receiver setup      |
-| Data-generation bootstrap and shared data    | Provider setup and output            |
-| Shared translation entries                   | Output and platform-specific entries |
+| Common                                   | Loader                           |
+|------------------------------------------|----------------------------------|
+| Registry entries and factories           | Registration API and timing      |
+| Payload types, codecs, registration list | Registration and receivers       |
+| Data-generation bootstrap and data       | Providers and output             |
+| Shared translations                      | Output and platform-only entries |
 
-Illustrative translation pattern; `TemplateTranslations` is not a bundled class:
+The bundled language providers use this pattern:
 
 ```java
-// Common: TemplateTranslations.addTranslations(BiConsumer<String, String> add)
-public static void addTranslations(final BiConsumer<String, String> add) {
-    add.accept("template.example", "Example");
-}
+// Common: inside TemplateENUSLanguageProvider.add(...).
+// provider.template$add("template.example", "Example");
 
 // Fabric: inside generateTranslations(...).
-TemplateTranslations.addTranslations(translationBuilder::add);
+TemplateENUSLanguageProvider.add(translationBuilder::add);
 // NeoForge: inside addTranslations().
-TemplateTranslations.addTranslations(this::add);
+TemplateENUSLanguageProvider.add(this::add);
 ```
 
-Use a small callback for shared declaration lists and `TemplateServices` for platform implementations called by Common.
-Keep platform-specific entries, lifecycle ordering, and execution-side rules in the platform modules.
-Sharing a list does not make the loaders' APIs or timing interchangeable.
+Use callbacks for declaration lists and `TemplateServices` for platform implementations called by Common.
+Platform-specific entries, ordering, and side rules stay with each loader.
+Language codes use `TemplateLanguage.Codes.EN_US`; add a nested `Keys` utility when shared translation keys are needed.
+Keep NeoForge-only keys in `NeoForgeLanguageKeys`.
+Configuration classes and hooks are placeholders; add options and any Fabric configuration dependency when the derived mod needs them.
 
 ### Configuration and Resources
 
-| Properties                                | Purpose                                      |
-|-------------------------------------------|----------------------------------------------|
-| `minecraft_*`, `java_version`, `username` | Game target and development environment      |
-| `fabric_*`, `neoforge_*`                  | Loader, tooling, and compatibility           |
-| `mixin_*`                                 | Mixin and MixinExtras requirements           |
-| `mod_*`                                   | Identity, artifact coordinates, and metadata |
+| Properties                                | Purpose                                 |
+|-------------------------------------------|-----------------------------------------|
+| `minecraft_*`, `java_version`, `username` | Game target and development environment |
+| `fabric_*`, `neoforge_*`                  | Loader, tooling, and compatibility      |
+| `mixin_*`                                 | Mixin and MixinExtras requirements      |
+| `mod_*`                                   | Identity, path expansion, and metadata  |
 
 Keep dependency versions in Gradle configuration, not reusable comments.
-NeoForge's ModDevGradle, NeoForm, NeoForge, and JavaFML properties describe separate layers.
-
-| Literal references                                                               | Expanded values                                                              |
-|----------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| Entrypoint classes, Mixin packages, Mixin/class-tweaker filenames, artwork paths | Mod metadata, dependency versions, Mixin minimum version, Java compatibility |
-
-Keep Fabric class-tweaker and NeoForge Access Transformer entries semantically equivalent for shared access changes.
-Use `.gitkeep` for intentional empty directories; remove it when real files arrive.
-The build excludes these placeholders from binary/source JARs and Javadoc.
+ModDevGradle, NeoForm, NeoForge, and JavaFML properties describe separate layers.
+Keep class-tweaker and Access Transformer entries semantically equivalent for shared access changes.
+Use `.gitkeep` for intentional empty directories; remove it when files arrive. The build excludes these placeholders from JARs and Javadoc.
 
 ## Reference: Code Conventions
 
 ### Naming
 
-| Case                                     | Pattern / example                                              |
-|------------------------------------------|----------------------------------------------------------------|
-| Common initialization                    | `TemplateModCommon`, `TemplateModCommonClient`                 |
-| Loader entrypoint, in each loader module | `TemplateMod`, `TemplateModClient`, `TemplateModDataGenerator` |
-| Vanilla counterpart                      | Prefix the full name: `TemplateRandomState`                    |
-| True domain counterpart                  | Replace the domain term; document that mod's mapping           |
-| Parallel module implementation           | Keep the full vanilla name: `TemplateCommonRandomState`        |
-| Internal helper                          | Omit redundant prefixes when the package and role are clear    |
-| Mixin                                    | Target name + `Mixin`                                          |
-| Injected member / bridge                 | `template$cachedValue`; use `@Unique` as needed                |
-| Ordinary member                          | Standard camelCase                                             |
+| Case                                      | Pattern / example                                              |
+|-------------------------------------------|----------------------------------------------------------------|
+| Common initialization                     | `TemplateModCommon`, `TemplateModCommonClient`                 |
+| Loader entrypoint, per module             | `TemplateMod`, `TemplateModClient`, `TemplateModDataGenerator` |
+| Vanilla counterpart                       | Prefix the full name: `TemplateRandomState`                    |
+| True domain counterpart                   | Replace the domain term; document that mod's mapping           |
+| Parallel module implementation            | Keep the full vanilla name: `TemplateCommonRandomState`        |
+| Internal helper                           | Omit redundant prefixes when the package and role are clear    |
+| Mixin                                     | Target name + `Mixin`                                          |
+| New injected member / bridge              | `template$cachedValue`; use `@Unique` as needed                |
+| Project-defined interface instance method | `template$add`, `template$getPlatformName`                     |
+| Other Java member                         | Standard camelCase                                             |
 
-Identical loader entrypoint names belong to separate module outputs.
-`@Shadow` names follow their mapped targets. Use the full mod ID for injected-member collision protection.
-Do not add wrappers or duplicate behavior just for naming symmetry.
+Loader entrypoints with identical names belong to separate module outputs.
+This project prefixes its own interface instance methods with the full mod ID, including their implementations; this is a project convention.
+Preserve upstream interface method names and `@Shadow` targets.
+Use small functional interfaces for callbacks, and `public static final` nested classes with private constructors for utility groups.
+Do not add wrappers merely for naming symmetry.
 
 ### Comments and Javadoc
 
-| Purpose                    | Example / rule                                                         |
-|----------------------------|------------------------------------------------------------------------|
-| Customization point        | `// Register Fabric data providers here.`                              |
-| Non-obvious constraint     | `// Load platform implementations without loader APIs in common code.` |
-| Clear upstream counterpart | `@see RandomState`; add `@author` where applicable                     |
-| Method navigation          | `{@link TemplateConstants#id(String)}`                                 |
-| File syntax                | Java/Groovy: `//`; YAML/properties: `#`                                |
-| Properties                 | `#` section heading; `##` property note                                |
+| Purpose                | Example / rule                                                         |
+|------------------------|------------------------------------------------------------------------|
+| Customization point    | `// Add shared translation entries here.`                              |
+| Non-obvious constraint | `// Load platform implementations without loader APIs in common code.` |
+| Upstream navigation    | `@see net.minecraft.client.ClientBootstrap`                            |
+| Method navigation      | `{@link TemplateConstants#id(String)}`                                 |
+| File syntax            | Java/Groovy: `//`; YAML/properties: `#`                                |
+| Properties             | `#` section heading; `##` property note                                |
 
 Explain intent, constraints, and replacement points; omit code narration and routine Javadoc on helpers or Mixins.
-Use brief English sentences ending in periods. Start each sentence on its own line; wrap at natural boundaries.
+Use brief English sentences ending in periods; start sentences on separate lines and wrap naturally.
 Preserve useful upstream URLs without trailing punctuation. Keep instructions out of JSON, service descriptors, and generated files.
+Explicit separators such as `MOD_ID + "." + "configuration"` and `MOD_NAME + " " + "Configs"` are acceptable for readability.
 
 ### Exceptions and Diagnostic Logs
 
-The following are message-format examples; placeholder members need not exist in the template.
+Format examples may use placeholder types and members:
 
 | Reference                | Example message                                                              |
 |--------------------------|------------------------------------------------------------------------------|
 | Parameter / local        | `"serviceClass"` or `"version: expected=" + VERSION + ", actual=" + version` |
-| Member field             | `"TemplateServices#PLATFORM: not initialized"`                               |
-| Method                   | `"TemplateServices#load(): cannot load service"`                             |
-| Shadow member            | `"TargetClass#method(): mixin shadow method is unavailable"`                 |
-| Injected member          | `"TargetMixin#template$cachedValue: not initialized"`                        |
+| Field                    | `"TemplateServices#PLATFORM: not initialized"`                               |
+| Method                   | `"TemplateServices#load(Class): cannot load service"`                        |
+| Shadow method            | `"TargetClass#method(int): mixin shadow method is unavailable"`              |
+| Injected field           | `"TargetMixin#template$cachedValue: not initialized"`                        |
 | Code name in explanation | `"provider: 'TemplatePlatformHelper' implementation required"`               |
-| Nested type              | `"TemplateProvider.Entry#load(): entry is unavailable"`                      |
+| Nested type              | `"TemplateProvider.Entry#load(String): entry is unavailable"`                |
 
-- **Reference:** use bare parameter/local names or the declaring type, including enclosing types. Shadows name the original declaration; injected members name the Mixin. `Type#method()` is a plain-text locator: omit parameter types and clarify overloads only when needed.
-- **Message:** `Objects.requireNonNull` normally needs only the name. Add `: explanation` when useful; other exceptions need a clear reason. Start explanations lowercase, preserving code spelling; single-quote code names in explanations, not prefixes. Omit trailing periods and redundant `Error:` prefixes. Logs use `{}`; routine status logs need no locator.
-- **Behavior:** use `IllegalArgumentException` for invalid inputs, `IllegalStateException` for invalid state, and `UnsupportedOperationException` for unsupported operations. Preserve checks, causes, log levels, and crash reports; do not hide violations with fallbacks or add formatting helpers for style alone.
-- **Upstream:** preserve wording and line breaks except necessary domain/value substitutions and the above reference, capitalization, quoting, and punctuation adjustments. Codec diagnostics and player messages need no forced locator.
+- **Locator:** use bare parameter/local names or the declaring type, including enclosing types. Methods use `Type#method(ParameterTypes)` with declared parameter types in order; omit names, modifiers, annotations, and generic type arguments. Use `()` for no arguments and qualify ambiguous type names. Shadows name the original declaration; injected members name the Mixin.
+- **Message:** `Objects.requireNonNull` normally needs only the name. Add `: explanation` when useful; other exceptions need a clear reason. Start explanations lowercase, preserving code spelling; single-quote code names in explanations, not locators. Omit trailing periods and redundant `Error:` prefixes. Log values use `{}`; routine status logs may omit locators.
+- **Behavior:** choose argument/state/unsupported-operation exceptions appropriately. Preserve checks, causes, log levels, and crash reports; avoid silent fallbacks and formatting helpers added only for style.
+- **Upstream:** preserve wording and line breaks except necessary domain/value substitutions and the above locator, capitalization, quoting, and punctuation adjustments. Codec diagnostics and player messages need no forced locator.
 
 ### Modifiers
 
@@ -263,6 +267,5 @@ Local-variable `final` is optional. Use minimal visibility and private construct
 | `./gradlew publishToMavenLocal` | Local Maven repository, normally `~/.m2/repository`                            |
 | `./gradlew publish`             | Project-root `repo/`, overridden by the `local_maven_url` environment variable |
 
-Root publication tasks include Common, Fabric, and NeoForge.
-The Common publication contains shared main code; loader outputs also include the applicable shared client code.
+Root tasks publish Common, Fabric, and NeoForge. Common contains shared main code; loader outputs also include applicable shared client code.
 GitHub Releases and mod distribution sites require separate publication steps.

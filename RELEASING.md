@@ -1,71 +1,44 @@
 # Release Guide
 
-Use this checklist to release either the multiloader template or a mod created from it.
-**Template release versions and derived-mod versions are independent.**
-
-See [Development](DEVELOPMENT.md) for daily commits, PRs, and branch synchronization.
+Template and derived-mod versions are independent.
+Use [Development](DEVELOPMENT.md) for setup, checks, commits, and branch synchronization.
 
 ---
 
 ## Choose a Version and Target
 
-1. Select the compatible Minecraft branch (`<minecraft_version>`) and the tested commit to release.
-2. Choose a new project version (`MAJOR.MINOR.PATCH`, with an optional prerelease suffix).
-3. Confirm the tag and Release title before creating the draft.
+Select a tested commit on the compatible Minecraft branch.
 
-| Item             | Format                                                               |
+| Item             | Format / example                                                     |
 |------------------|----------------------------------------------------------------------|
 | Minecraft branch | `<minecraft_version>`                                                |
-| Git tag          | `mc<minecraft_version>-<project_version>`                            |
+| Git tag          | `mc<minecraft_version>-<project_version>`; `mc26.3-0.1.0`            |
 | Release title    | `<project_name> <project_version> for Minecraft <minecraft_version>` |
+| Prerelease       | `-alpha.1`, `-beta.1`, or `-rc.1`; mark the Release **Pre-release**  |
 
-The Minecraft prefix identifies compatibility; **do not reset the project's version sequence** when Minecraft changes.
-The same project version may target multiple Minecraft versions when the feature baseline is equivalent.
-Implementation, dependencies, and Gradle configuration can differ.
-Older maintained branches may remain on an earlier version series and receive their own updates.
-For example, `mc26.2-0.1.4` may be released after `mc26.3-0.2.0` as a fix to the older feature series.
+| Project              | Version policy                                                                                            |
+|----------------------|-----------------------------------------------------------------------------------------------------------|
+| multiloader template | Starts at `0.1.0`, stays in `0.x.x`; Minor for meaningful capabilities/structure, Patch for smaller fixes |
+| Derived mod          | Own version sequence in `mod_version`; the inherited `1.0.0` is only a starter value                      |
 
-Use `-alpha.1` for early tests, `-beta.1` for wider tests, or `-rc.1` for release candidates when needed.
-These suffixes are optional even in `0.x.x`; mark such GitHub Releases as **Pre-release**.
-See [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-**Template:** multiloader starts at `0.1.0` and intentionally remains in `0.x.x`.
-Use Minor for meaningful capabilities or structural changes and Patch for smaller fixes.
-Its policy does not restrict derived mods from reaching `1.0.0`.
-
-**Derived mod:** Choose its own version and set `mod_version` in `gradle.properties`.
-The template's `mod_version=1.0.0` is only a starter example; it is **not** the template's Release version.
+Follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) with an optional prerelease suffix.
+The Minecraft prefix records compatibility; changing Minecraft does not reset the project version sequence.
+Equivalent feature baselines may share a project version across Minecraft branches, despite different implementations.
+Older maintained series can receive later fixes: `mc26.2-0.1.4` may follow `mc26.3-0.2.0`.
 
 ## Verify the Release Candidate
 
-1. Update the intended version or metadata, if needed, and commit the changes.
-2. Validate the candidate from a clean checkout:
+1. Update version/metadata as applicable and commit.
+2. From a clean checkout, perform the [build and runtime checks](DEVELOPMENT.md#build-and-test) for both loaders.
+3. Regenerate affected data; test applicable persistence, networking, and migration behavior.
+4. Inspect JAR contents, license, expanded metadata, and release notes. Record only checks actually performed.
+5. If world data changes, include backup or migration instructions.
 
-   ```shell
-   ./gradlew clean build :fabric:validateAccessWidener --warning-mode all
-   ```
-
-3. Run Fabric and NeoForge clients and dedicated servers **separately**, stopping each cleanly:
-
-   ```shell
-   ./gradlew :fabric:runClient
-   ./gradlew :neoforge:runClient
-   ./gradlew :fabric:runServer
-   ./gradlew :neoforge:runServer
-   ```
-
-4. Run relevant data-generation, persistence, networking, and migration tests. Inspect output JARs, generated resources, license, version metadata, and release notes.
-5. If Maven publication applies, check metadata and artifacts with `./gradlew publishToMavenLocal --warning-mode all`.
-
-**Check:** A successful build is not proof of runtime compatibility.
-Document only tests actually run.
-If world data may change, provide backup or migration instructions.
+A successful build alone does not establish runtime compatibility.
 
 ## Check Generated Artifacts
 
-Gradle names JARs from the project configuration, not from the Git tag.
-Its shared conventions use `${mod_version}+mc${minecraft_version}` for the build version
-and `${mod_id}-${project.name}` for the archive name:
+Gradle uses `${mod_version}+mc${minecraft_version}` as the build version and `${mod_id}-${project.name}` as the archive name:
 
 ```text
 <mod_id>-fabric-<mod_version>+mc<minecraft_version>.jar
@@ -73,55 +46,40 @@ and `${mod_id}-${project.name}` for the archive name:
 ```
 
 Put prerelease labels in `mod_version`, before `+mc...`.
-Check the actual files in each module's `build/libs/`, because loaders may add classifiers.
-Do not distribute `-dev`, `-sources`, or `-javadoc` JARs as the normal player download.
-
-The template's own release tag may therefore differ from the example mod version embedded in its demonstration JARs.
-GitHub-generated **Source code (zip/tar.gz)** assets are source snapshots, not compiled mod JARs.
+Inspect actual files in each module's `build/libs/`; loaders may add classifiers.
+Player downloads use distributable JARs. Source, Javadoc, and development JARs are separate artifacts.
+GitHub's generated source archives contain source snapshots.
+The template may release a source snapshot, and its tag version may differ from the example mod version inside demonstration JARs.
 
 ## Publish on GitHub
 
-1. Push the **verified commit** to its corresponding Minecraft branch. If necessary, synchronize compatible changes from `dev` first; follow the [branch guide](DEVELOPMENT.md#synchronize-minecraft-branches).
-2. Open **Releases → Draft a new release** on GitHub. Select a **new tag name** and the exact target commit or branch.
-3. Enter the Release title and notes. For a derived mod, attach the distributable Fabric and NeoForge JARs. The template can release a source snapshot without player-installable JARs.
-4. Recheck the tag, target commit, Minecraft compatibility, prerelease flag, notes, and **every attached file**. Publish only after all checks pass.
-5. Check the published Release and any distribution sites separately. GitHub does not automatically upload to Modrinth or CurseForge unless an explicit automation is configured.
-
-A concise note format:
+1. Push the verified commit to its Minecraft branch, following the [branch guide](DEVELOPMENT.md#synchronize-minecraft-branches).
+2. Open **Releases → Draft a new release**; select a new tag and the verified target commit.
+3. Add notes and, for a derived mod, the distributable Fabric and NeoForge JARs.
+4. Recheck the target, tag, compatibility, prerelease flag, and every attachment; publish the draft.
+5. Verify the published Release. Upload to distribution sites separately unless explicit automation handles them.
 
 ```text
 <project_name> <project_version> for Minecraft <minecraft_version>
 
 Changes: <key changes>
-Verified: <tests actually performed>
+Verified: <checks actually performed>
 Known limitations: <if any>
 ```
 
-### Before Enabling Immutable Releases
+### Immutable Releases
 
-GitHub [Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) can protect a published tag, attached artifacts, and release provenance.
-**It is optional; ordinary tag naming does not require it.**
-
-- The setting applies to future published Releases, not retroactively.
-- Turning it off does **not** unlock Releases published while it was enabled.
-- A tag name used by an immutable Release cannot be reused even after deleting that Release and tag, or recreating the repository under the same name.
-- Once published immutably, the associated tag and assets cannot be replaced; titles and notes remain editable.
-
-**Default for this template:** leave Immutable Releases disabled while the publishing process is still evolving.
-Use drafts to verify everything before publishing.
-Correct a published version with a **new version and tag**, not by moving an existing tag.
+[Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) are optional; this template defaults to leaving them disabled.
+If enabled, attach every artifact to the draft before publishing.
+Published assets and the associated tag are locked; titles and notes remain editable.
+Disabling the setting does not unlock existing immutable releases.
+Their tag names cannot be reused after deletion, including after recreating a repository with the same name.
 
 ## Maintain Released Versions
 
-- Keep published tags stable and create a new tag for fixes.
-- Merge `dev` into the corresponding Minecraft branch only when the history and all changes are compatible. Use fast-forward for linear histories; choose reviewed merges or selective `cherry-pick` when histories differ.
-- Backport selected commits or reimplement their intent when Minecraft APIs differ. `cherry-pick` does not adapt code automatically. Do not merge an entire newer branch just to transfer a doc or bug fix.
-- Give two Minecraft builds the same project version only when their advertised feature baseline is equivalent. Older branches may retain an earlier feature series; verify and test each port independently.
-- Do not force-push protected or published branch history to make branches match. Respect branch rules requiring PRs and checks.
+- Keep published tags stable; release fixes with new versions and tags.
+- Synchronize only compatible changes. Use reviewed merges or selected cherry-picks when branches diverge; respect PR requirements and avoid force-pushing published history.
+- Backport selectively or adapt the implementation. Cherry-pick does not translate APIs.
+- Test every Minecraft port independently and use matching project versions only for equivalent feature baselines.
 
-**Other GitHub cautions:** Closing a PR retains its history.
-Changing a public repository to private does not make existing public forks private.
-Deleting repositories or rewriting history does not reliably erase existing clones, forks, or references.
-Never commit secrets; revoke and rotate exposed credentials.
-
-For routine branches, commits, PRs, and Issues, use [Development](DEVELOPMENT.md#make-a-change).
+Never commit secrets; revoke and rotate any that are exposed.
