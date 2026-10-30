@@ -10,7 +10,7 @@ public final class NeoForgeENUSLanguageProvider extends LanguageProvider {
     private static final String TITLE = TemplateConstants.MOD_NAME + " " + "Configs";
 
     public NeoForgeENUSLanguageProvider(final PackOutput output) {
-        super(output, TemplateConstants.MOD_ID, TemplateLanguageKeys.EN_US);
+        super(output, TemplateConstants.MOD_ID, TemplateLanguage.Codes.EN_US);
     }
 
     @Override
