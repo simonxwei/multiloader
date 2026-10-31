@@ -21,13 +21,13 @@ For versioning and releases, see [Releasing](RELEASING.md).
 | Context           | Path references                                                                                    |
 |-------------------|----------------------------------------------------------------------------------------------------|
 | Reusable template | Keep `${mod_id}`, `${mod_package}`, `${mod_icon}`, `${mod_banner}` expansion                       |
-| Derived mod       | Use literal Mixin packages, class names, and resource paths; retain version and metadata expansion |
+| Derived mod       | Use literal Mixin packages, entrypoint classes, and class-tweaker paths; retain metadata expansion |
 
 **Scope:** Change project identity and references only.
 Preserve examples, artwork, generated data, build configuration, and structure unless a change is required or explicitly requested.
 
 Properties cannot rename files or Java types.
-After converting path references, remove unused path properties and expansion entries; edit data providers before regenerating data.
+After fixing paths, remove only unused path properties and expansion entries. Update identifiers in data providers before regenerating data.
 Search for stale identifiers, review the diff, and [build and test](#build-and-test).
 
 `mod_version=1.0.0` is a starter mod version, not a template release version.
@@ -181,7 +181,7 @@ CI builds, validates access changes, publishes to Maven local, and uploads artif
 
 Root tasks publish Common, Fabric, and NeoForge.
 Common contains shared main code; loader outputs include applicable shared client code.
-GitHub and mod distribution require separate steps; see [Releasing](RELEASING.md).
+GitHub and mod distribution are separate.
 
 ## Git Workflow
 

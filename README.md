@@ -8,12 +8,12 @@ A Gradle development template for one Minecraft mod targeting **Fabric** and **N
 
 ## Quick Start
 
-| Step | Action                                                                                                                                          |
-|------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1    | Install the JDK specified by `java_version` and import the Gradle project.                                                                      |
-| 2    | Set the project identity in `settings.gradle` and `gradle.properties`; rename Java packages, types, method prefixes, and resources accordingly. |
-| 3    | Replace template path placeholders with literal references, including Mixin configurations and loader metadata.                                 |
-| 4    | [Build and test both loaders](DEVELOPMENT.md#build-and-test), including dedicated servers.                                                      |
+| Step | Action                                                                                                                                         |
+|------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Install the JDK specified by `java_version` and import the Gradle project.                                                                     |
+| 2    | Set the project identity in `settings.gradle` and `gradle.properties`; rename Java packages, types, method prefixes, and resource identifiers. |
+| 3    | Fix Mixin, entrypoint, and class-tweaker paths; retain metadata value expansion.                                                               |
+| 4    | [Build and test both loaders](DEVELOPMENT.md#build-and-test), including dedicated servers.                                                     |
 
 **Scope:** Initialization changes project identity and references only.
 Preserve examples, artwork, build configuration, and project structure unless explicitly required or requested otherwise.
