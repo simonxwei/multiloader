@@ -8,10 +8,15 @@ A Gradle development template for one Minecraft mod targeting **Fabric** and **N
 
 ## Quick Start
 
-1. Install the JDK specified by `java_version` and import the Gradle project.
-2. Set the project identity and dependencies in `settings.gradle` and `gradle.properties`; refactor Java names and rename resources together.
-3. Resolve template path placeholders to literal references in the new mod; replace artwork, example data, and documentation.
-4. Use the included wrapper to [build and test both loaders](DEVELOPMENT.md#build-and-test), including dedicated servers.
+| Step | Action                                                                                                                                          |
+|------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1    | Install the JDK specified by `java_version` and import the Gradle project.                                                                      |
+| 2    | Set the project identity in `settings.gradle` and `gradle.properties`; rename Java packages, types, method prefixes, and resources accordingly. |
+| 3    | Replace template path placeholders with literal references, including Mixin configurations and loader metadata.                                 |
+| 4    | [Build and test both loaders](DEVELOPMENT.md#build-and-test), including dedicated servers.                                                      |
+
+**Scope:** Initialization changes project identity and references only.
+Preserve examples, artwork, build configuration, and project structure unless explicitly required or requested otherwise.
 
 Follow the [setup checklist](DEVELOPMENT.md#create-a-mod); changing properties alone does not rename files or Java types.
 
