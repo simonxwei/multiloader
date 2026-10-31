@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public final class FabricENUSLanguageProvider extends FabricLanguageProvider {
 
     public FabricENUSLanguageProvider(final FabricPackOutput packOutput, final CompletableFuture<HolderLookup.Provider> registryLookup) {
-        super(packOutput, TemplateLanguage.Codes.EN_US, registryLookup);
+        super(packOutput, TemplateLanguageCodes.EN_US, registryLookup);
     }
 
     @Override
