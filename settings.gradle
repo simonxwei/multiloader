@@ -20,7 +20,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
-// Rename the project when creating a mod from this template.
+// Keep this name aligned with the repository and README heading when deriving a project.
 rootProject.name = 'multiloader'
 
 includeBuild('build-logic')

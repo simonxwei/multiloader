@@ -72,7 +72,7 @@ dependencies {
 
 }
 
-// Expand template properties into generated NeoForge mod metadata.
+// Expand mod properties into generated NeoForge metadata.
 var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
     var replaceProperties = [
             mod_id                          : mod_id,

@@ -1,7 +1,8 @@
 # Release Guide
 
-Template and derived mods have independent version sequences.
-For development checks and branch operations, see [Development](DEVELOPMENT.md).
+The `multiloader` project and derived mods have independent version sequences.
+
+For setup, architecture, conventions, and testing, see [Development](DEVELOPMENT.md).
 
 ---
 
@@ -11,61 +12,62 @@ Select a tested commit on the compatible Minecraft branch.
 
 | Item             | Format / example                                                     |
 |------------------|----------------------------------------------------------------------|
+| Project name     | `rootProject.name`, not `mod_name`                                   |
 | Minecraft branch | `<minecraft_version>`                                                |
 | Git tag          | `mc<minecraft_version>-<project_version>`; e.g. `mc26.3-0.1.0`       |
 | Release title    | `<project_name> <project_version> for Minecraft <minecraft_version>` |
 | Prerelease       | `-alpha.1`, `-beta.1`, `-rc.1`; mark GitHub **Pre-release**          |
 
-| Project     | Policy                                                                              |
-|-------------|-------------------------------------------------------------------------------------|
-| Template    | Begins at `0.1.0`, stays in `0.x.x`; minor for significant changes, patch for fixes |
-| Derived mod | Uses its own `mod_version`; inherited `1.0.0` is only a starter value               |
+| Project       | Policy                                                                              |
+|---------------|-------------------------------------------------------------------------------------|
+| `multiloader` | Begins at `0.1.0`, stays in `0.x.x`; minor for significant changes, patch for fixes |
+| Derived mod   | Own `mod_version`; inherited `1.0.0` is a starter value only                        |
 
-Follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) with optional prerelease suffixes.
-Minecraft compatibility is recorded by the tag prefix, without resetting the project version.
-Equivalent feature baselines may share versions across MC branches; older supported series may receive later fixes.
+Follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Minecraft compatibility is encoded in the tag prefix, without resetting the project version.
+Equivalent feature baselines may share versions across MC branches; supported older series may receive fixes.
 
 ## Release Checklist
 
-- [ ] Update and commit the version, metadata, and release notes.
-- [ ] Run [build and runtime tests](DEVELOPMENT.md#build-and-test) on **both loaders**, including dedicated servers.
-- [ ] Regenerate affected data; test applicable persistence, networking, and migrations.
+- [ ] Commit version, metadata, and release notes.
+- [ ] [Build and test](DEVELOPMENT.md#build-and-test) **both loaders**, including dedicated servers.
+- [ ] Regenerate affected data; check persistence, networking, and migrations if applicable.
 - [ ] Inspect JAR contents, license, expanded metadata, and distributable artifacts.
-- [ ] Document checks actually performed, known limitations, and world-backup/migration steps if needed.
+- [ ] Record checks performed, limitations, and backup/migration steps if needed.
 
-Build success alone does not prove runtime compatibility.
+A successful build does not replace runtime testing.
 
 ## Artifacts
 
-Gradle version: `${mod_version}+mc${minecraft_version}`; archive base name: `${mod_id}-${project.name}`.
+Gradle version: `${mod_version}+mc${minecraft_version}`; archive base: `${mod_id}-${project.name}`.
 
 ```text
 <mod_id>-fabric-<mod_version>+mc<minecraft_version>.jar
 <mod_id>-neoforge-<mod_version>+mc<minecraft_version>.jar
 ```
 
-Check actual files in each module's `build/libs/` for classifiers.
-Put prerelease labels in `mod_version`, before `+mc...`. Distribute loader-ready JARs; source, Javadoc, and development JARs are separate.
-GitHub-generated source archives are snapshots, not mod binaries.
+Check actual files under each module's `build/libs/` for classifiers.
+Prerelease suffixes belong in `mod_version`, before `+mc...`.
+Distribute loader-ready JARs; development, source, and Javadoc artifacts are separate.
+GitHub source archives are not mod binaries.
 
-The template may publish source-only releases whose tags differ from the demonstration JAR version.
+`multiloader` releases may be source-only and use tags independent of the example mod version.
 
 ## Version Maintenance
 
-- Keep published tags stable; issue fixes with new versions and tags.
-- Backport compatible changes through reviewed merges or selective cherry-picks; never force-push released history.
-- Adapt APIs and test each Minecraft port independently. Reuse project versions only for equivalent feature baselines.
-- Never commit secrets; revoke and rotate exposed credentials.
+- Do not change released tags; issue fixes under new versions.
+- Backport through reviewed merges or cherry-picks; test each Minecraft port and never force-push released history.
+- Reuse project versions only for equivalent feature baselines; do not commit secrets.
 
 See [Minecraft branch synchronization](DEVELOPMENT.md#synchronize-minecraft-branches).
 
 ## GitHub Releases
 
-1. Push the verified commit to the correct Minecraft branch.
-2. Open **Releases → Draft a new release**; set a new tag and the verified commit.
-3. Add notes and, for a derived mod, the Fabric and NeoForge distributable JARs.
-4. Check tag, commit, compatibility, prerelease flag, and attachments; publish and verify.
-5. Publish to mod distribution sites separately unless explicitly automated.
+1. Push the verified commit to the target Minecraft branch.
+2. Open **Releases → Draft a new release** and select a new tag at that commit.
+3. Add notes and, for derived mods, Fabric and NeoForge JARs.
+4. Verify tag, commit, compatibility, prerelease flag, and attachments; publish.
+5. Publish to other distribution sites separately unless automated.
 
 ```text
 <project_name> <project_version> for Minecraft <minecraft_version>
@@ -77,6 +79,6 @@ Known limitations: <if any>
 
 ### Immutable Releases
 
-[Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) are optional and disabled by default in this template.
-If enabled, attach everything **before** publishing: assets and tags become locked, while titles and notes remain editable.
-Disabling the feature does not unlock existing immutable releases; their deleted tag names cannot be reused, even in a recreated repository of the same name.
+[Immutable Releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) are optional and disabled by default.
+When enabled, attach everything **before** publishing: assets and tags become locked, while titles and notes remain editable.
+Disabling the setting does not unlock prior immutable releases or allow their deleted tag names to be reused.
